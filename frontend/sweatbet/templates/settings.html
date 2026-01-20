@@ -1,0 +1,366 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - SweatBet{% endblock %}
+
+{% block extra_head %}
+<style>
+    .settings-page {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .settings-header {
+        margin-bottom: 3rem;
+    }
+    
+    .settings-header h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+    
+    .settings-header p {
+        color: var(--text-secondary);
+    }
+    
+    .settings-section {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .settings-section h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .settings-section h2 .icon {
+        font-size: 1.5rem;
+    }
+    
+    .data-grid {
+        display: grid;
+        gap: 1rem;
+    }
+    
+    .data-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .data-row:last-child {
+        border-bottom: none;
+    }
+    
+    .data-label {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+    
+    .data-value {
+        font-weight: 500;
+        text-align: right;
+    }
+    
+    .data-value.highlight {
+        color: var(--accent-green);
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+    }
+    
+    .btn-export {
+        background: var(--bg-card-hover);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+    
+    .btn-export:hover {
+        background: var(--border-color);
+    }
+    
+    .btn-disconnect {
+        background: transparent;
+        color: var(--strava-orange);
+        border: 1px solid var(--strava-orange);
+    }
+    
+    .btn-disconnect:hover {
+        background: rgba(252, 76, 2, 0.1);
+    }
+    
+    .danger-zone {
+        border-color: var(--accent-red);
+        background: rgba(255, 68, 68, 0.05);
+    }
+    
+    .danger-zone h2 {
+        color: var(--accent-red);
+    }
+    
+    .danger-zone p {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+    
+    .btn-danger {
+        background: var(--accent-red);
+        color: white;
+    }
+    
+    .btn-danger:hover {
+        background: #cc3333;
+    }
+    
+    .success-banner {
+        background: rgba(0, 212, 106, 0.1);
+        border: 1px solid var(--accent-green);
+        color: var(--accent-green);
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .confirm-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .confirm-modal.active {
+        display: flex;
+    }
+    
+    .modal-content {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2rem;
+        max-width: 450px;
+        text-align: center;
+    }
+    
+    .modal-content h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .modal-content p {
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+    }
+    
+    .modal-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+    
+    .strava-connection {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: var(--bg-dark);
+        border-radius: 12px;
+        margin-bottom: 1rem;
+    }
+    
+    .strava-logo-small {
+        width: 40px;
+        height: 40px;
+        background: var(--strava-orange);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+    
+    .connection-info {
+        flex: 1;
+    }
+    
+    .connection-info .status {
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .connection-info .status::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: var(--accent-green);
+        border-radius: 50%;
+    }
+    
+    .connection-info .scope {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="settings-page">
+    <div class="settings-header">
+        <h1>Account Settings</h1>
+        <p>Manage your data and account preferences</p>
+    </div>
+    
+    {% if request.query_params.get('disconnected') %}
+    <div class="success-banner">
+        <span>✓</span>
+        <span>Strava has been disconnected from your account.</span>
+    </div>
+    {% endif %}
+    
+    <!-- Profile Section -->
+    <section class="settings-section">
+        <h2><span class="icon">👤</span> Your Profile</h2>
+        <div class="data-grid">
+            <div class="data-row">
+                <span class="data-label">Name</span>
+                <span class="data-value">{{ user.full_name or 'Not set' }}</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Strava Athlete ID</span>
+                <span class="data-value">{{ user.strava_athlete_id }}</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">SweatBet User ID</span>
+                <span class="data-value" style="font-family: monospace; font-size: 0.8rem;">{{ user.id }}</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Account Created</span>
+                <span class="data-value">{{ user.created_at.strftime('%B %d, %Y') if user.created_at else 'Unknown' }}</span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Strava Connection -->
+    <section class="settings-section">
+        <h2><span class="icon">🔗</span> Strava Connection</h2>
+        {% if token_info %}
+        <div class="strava-connection">
+            <div class="strava-logo-small">🏃</div>
+            <div class="connection-info">
+                <div class="status">Connected</div>
+                <div class="scope">Permissions: {{ token_info.scope or 'activity:read_all, read' }}</div>
+            </div>
+        </div>
+        <div class="data-grid">
+            <div class="data-row">
+                <span class="data-label">Connected Since</span>
+                <span class="data-value">{{ token_info.created_at[:10] if token_info.created_at else 'Unknown' }}</span>
+            </div>
+        </div>
+        <div class="action-buttons">
+            <form action="/settings/disconnect" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-disconnect" onclick="return confirm('Are you sure you want to disconnect Strava? You can reconnect later.')">
+                    Disconnect Strava
+                </button>
+            </form>
+        </div>
+        {% else %}
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">Strava is not connected to your account.</p>
+        <a href="/auth/strava" class="btn btn-primary">Connect Strava</a>
+        {% endif %}
+    </section>
+    
+    <!-- Data Export -->
+    <section class="settings-section">
+        <h2><span class="icon">📦</span> Your Data</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            Download a copy of all data we store about you. The export includes your profile information and Strava connection details.
+        </p>
+        <div class="action-buttons">
+            <a href="/settings/export" class="btn btn-export" download>
+                📥 Export My Data (JSON)
+            </a>
+        </div>
+    </section>
+    
+    <!-- Danger Zone -->
+    <section class="settings-section danger-zone">
+        <h2><span class="icon">⚠️</span> Danger Zone</h2>
+        <p>
+            <strong>Delete your account permanently.</strong><br>
+            This action cannot be undone. All your data will be permanently removed, including your profile, Strava connection, and any bet history.
+        </p>
+        <button type="button" class="btn btn-danger" onclick="showDeleteModal()">
+            🗑️ Delete My Account
+        </button>
+    </section>
+    
+    <div class="legal-footer" style="margin-top: 2rem; text-align: center;">
+        <a href="/dashboard" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="confirm-modal">
+    <div class="modal-content">
+        <h3>⚠️ Delete Account?</h3>
+        <p>This will permanently delete your SweatBet account and all associated data. This action cannot be undone.</p>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="hideDeleteModal()">Cancel</button>
+            <form action="/settings/delete" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-danger">Yes, Delete My Account</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function showDeleteModal() {
+    document.getElementById('deleteModal').classList.add('active');
+}
+
+function hideDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('active');
+}
+
+// Close modal on outside click
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        hideDeleteModal();
+    }
+});
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        hideDeleteModal();
+    }
+});
+</script>
+{% endblock %}
+

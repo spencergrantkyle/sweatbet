@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}SweatBet - Put Money on Your Fitness Goals{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">
+            Put <span class="highlight">Money</span> on Your<br>
+            Fitness Goals
+        </h1>
+        <p class="hero-subtitle">
+            Stop making excuses. Start making bets. Link your Strava, 
+            set your goals, and put real stakes on your training.
+        </p>
+        
+        <div class="cta-section">
+            <a href="{{ auth_url }}" class="strava-btn">
+                <svg class="strava-logo" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/>
+                </svg>
+                Connect with Strava
+            </a>
+            <p class="cta-subtext">Free to join. Only pay when you skip leg day.</p>
+        </div>
+    </div>
+    
+    <div class="hero-visual">
+        <div class="stats-card">
+            <div class="stat">
+                <span class="stat-value">87%</span>
+                <span class="stat-label">Complete their goals</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">R50K+</span>
+                <span class="stat-label">On the line monthly</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">3.2x</span>
+                <span class="stat-label">More consistent training</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works">
+    <h2 class="section-title">How It Works</h2>
+    <div class="steps">
+        <div class="step">
+            <div class="step-number">01</div>
+            <h3>Link Strava</h3>
+            <p>Connect your Strava account to automatically verify your activities.</p>
+        </div>
+        <div class="step">
+            <div class="step-number">02</div>
+            <h3>Create a Bet</h3>
+            <p>Set a distance goal, pick a deadline, and put money on it.</p>
+        </div>
+        <div class="step">
+            <div class="step-number">03</div>
+            <h3>Get Moving</h3>
+            <p>Complete your run or ride. We verify automatically via Strava.</p>
+        </div>
+        <div class="step">
+            <div class="step-number">04</div>
+            <h3>Win or Pay</h3>
+            <p>Hit your goal and keep your cash. Miss it and pay up.</p>
+        </div>
+    </div>
+</section>
+
+<section class="bet-types">
+    <h2 class="section-title">Ways to Bet</h2>
+    <div class="bet-cards">
+        <div class="bet-card">
+            <div class="bet-icon">🎯</div>
+            <h3>Solo Challenge</h3>
+            <p>Bet against yourself. Hit your goal or lose your stake.</p>
+        </div>
+        <div class="bet-card featured">
+            <div class="bet-icon">⚔️</div>
+            <h3>1v1 Challenge</h3>
+            <p>Challenge a friend. Loser pays the winner.</p>
+            <span class="badge">Most Popular</span>
+        </div>
+        <div class="bet-card">
+            <div class="bet-icon">👥</div>
+            <h3>Group Pool</h3>
+            <p>Multiple athletes, winner takes all. Coming soon.</p>
+        </div>
+    </div>
+</section>
+
+{% if error %}
+<div class="error-banner">
+    <p>{{ error }}</p>
+</div>
+{% endif %}
+{% endblock %}
+

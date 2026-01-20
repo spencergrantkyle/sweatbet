@@ -1,0 +1,56 @@
+# Reference template directory
+Fullstack-FastAPI/
+
+# Documentation
+StravaDocs/
+DevelopSweatBetWithRailway.md
+SweatBetPRD.md
+*.pdf
+*.md
+
+# Development databases
+*.db
+dev.db
+
+# Environment files
+.env
+.env.*
+.env.local
+
+# Python virtual environments
+venv/
+.venv/
+ENV/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Railway config (not needed inside container)
+railway.toml
+.railwayignore
+
+# Tests (optional - remove if you want tests in container)
+backend/tests/
+

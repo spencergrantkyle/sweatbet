@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - SweatBet{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+    <div class="dashboard-header">
+        <div class="user-welcome">
+            {% if user.profile_picture %}
+            <img src="{{ user.profile_picture }}" alt="Profile" class="user-avatar">
+            {% else %}
+            <div class="user-avatar-placeholder">{{ user.firstname[0] if user.firstname else '?' }}</div>
+            {% endif %}
+            <div class="user-info">
+                <h1>Hey, {{ user.firstname or 'Athlete' }}!</h1>
+                <p class="user-subtitle">Ready to put your money where your miles are?</p>
+            </div>
+        </div>
+        <a href="/bets/create" class="btn btn-primary">
+            + Create New Bet
+        </a>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="dashboard-section activities-section">
+            <div class="section-header">
+                <h2>Recent Activities</h2>
+                <span class="badge">From Strava</span>
+            </div>
+            
+            {% if activities %}
+            <div class="activities-list">
+                {% for activity in activities %}
+                <div class="activity-card">
+                    <div class="activity-icon">
+                        {% if activity.type == 'Run' %}
+                        🏃
+                        {% elif activity.type == 'Ride' %}
+                        🚴
+                        {% else %}
+                        🏋️
+                        {% endif %}
+                    </div>
+                    <div class="activity-details">
+                        <h4 class="activity-name">{{ activity.name }}</h4>
+                        <div class="activity-meta">
+                            <span class="activity-type">{{ activity.type }}</span>
+                            <span class="activity-date">{{ activity.start_date_local[:10] }}</span>
+                        </div>
+                    </div>
+                    <div class="activity-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">{{ "%.2f"|format(activity.distance / 1000) }}</span>
+                            <span class="stat-unit">km</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">{{ (activity.moving_time // 60) }}</span>
+                            <span class="stat-unit">min</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <p>No recent activities found. Get out there and move!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="dashboard-section bets-section">
+            <div class="section-header">
+                <h2>Active Bets</h2>
+                {% if active_bets %}
+                <a href="/bets" class="nav-link">View All →</a>
+                {% endif %}
+            </div>
+            
+            {% if active_bets %}
+            <div class="active-bets-list">
+                {% for bet in active_bets %}
+                <div class="active-bet-item">
+                    <div class="active-bet-icon">
+                        {% if bet.activity_type.value == 'Run' %}🏃
+                        {% elif bet.activity_type.value == 'Ride' %}🚴
+                        {% elif bet.activity_type.value == 'Walk' %}🚶
+                        {% elif bet.activity_type.value == 'Hike' %}🥾
+                        {% elif bet.activity_type.value == 'Swim' %}🏊
+                        {% else %}🏋️{% endif %}
+                    </div>
+                    <div class="active-bet-info">
+                        <div class="active-bet-title">{{ bet.title }}</div>
+                        <div class="active-bet-meta">
+                            {{ bet.activity_type.value }}
+                            {% if bet.distance_km %} • {{ "%.1f"|format(bet.distance_km) }} km{% endif %}
+                            {% if bet.wager_amount > 0 %} • ${{ "%.0f"|format(bet.wager_amount) }}{% endif %}
+                        </div>
+                    </div>
+                    <div class="active-bet-deadline">
+                        <div class="date">{{ bet.deadline.strftime('%b %d') }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🎲</div>
+                <h3>No Active Bets</h3>
+                <p>Create your first bet and put some skin in the game!</p>
+                <a href="/bets/create" class="btn btn-secondary">Create a Bet</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+

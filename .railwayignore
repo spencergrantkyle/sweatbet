@@ -1,0 +1,44 @@
+# Reference template directory - not for deployment
+Fullstack-FastAPI/
+
+# Documentation files
+StravaDocs/
+DevelopSweatBetWithRailway.md
+SweatBetPRD.md
+*.pdf
+
+# Development files
+*.db
+dev.db
+.env
+.env.local
+.env.*.local
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+ENV/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+pytest.ini
+
+# Git
+.git/
+.gitignore
+

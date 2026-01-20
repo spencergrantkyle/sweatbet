@@ -1,0 +1,2 @@
+# SweatBet frontend package
+

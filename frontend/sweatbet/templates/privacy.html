@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy - SweatBet{% endblock %}
+
+{% block content %}
+<div class="legal-page">
+    <div class="legal-container">
+        <div class="legal-header">
+            <h1 class="legal-title">Privacy Policy</h1>
+            <p class="legal-updated">Last updated: January 1, 2026</p>
+        </div>
+        
+        <div class="legal-content">
+            <section class="legal-section">
+                <h2>1. Introduction</h2>
+                <p>SweatBet ("we," "us," or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our fitness betting platform that integrates with Strava.</p>
+                <p>By using SweatBet, you agree to the collection and use of information in accordance with this policy.</p>
+            </section>
+            
+            <section class="legal-section">
+                <h2>2. Information We Collect</h2>
+                <h3>2.1 Strava Account Data</h3>
+                <p>When you connect your Strava account, we collect:</p>
+                <ul>
+                    <li><strong>Athlete Profile:</strong> Your Strava athlete ID, first name, last name, and profile picture</li>
+                    <li><strong>Activities:</strong> Your workout activities including type (run, ride, etc.), distance, duration, and date</li>
+                    <li><strong>OAuth Tokens:</strong> Access and refresh tokens to maintain your Strava connection</li>
+                </ul>
+                
+                <h3>2.2 Usage Data</h3>
+                <p>We automatically collect information about how you interact with SweatBet, including pages visited and features used.</p>
+            </section>
+            
+            <section class="legal-section">
+                <h2>3. How We Use Your Information</h2>
+                <p>We use the collected data for the following purposes:</p>
+                <ul>
+                    <li><strong>Bet Verification:</strong> To verify that you've completed the fitness activities required for your bets</li>
+                    <li><strong>Account Management:</strong> To maintain your SweatBet account and display your profile</li>
+                    <li><strong>Service Improvement:</strong> To understand how users interact with our platform</li>
+                    <li><strong>Communication:</strong> To send you notifications about your bets and account status</li>
+                </ul>
+            </section>
+            
+            <section class="legal-section">
+                <h2>4. Data Sharing</h2>
+                <p>We do not sell, trade, or rent your personal information to third parties. We may share data only in the following circumstances:</p>
+                <ul>
+                    <li><strong>With Your Consent:</strong> When you explicitly agree to sharing</li>
+                    <li><strong>Legal Requirements:</strong> If required by law or to protect our rights</li>
+                    <li><strong>Service Providers:</strong> With trusted partners who assist in operating our service (e.g., hosting providers), bound by confidentiality agreements</li>
+                </ul>
+            </section>
+            
+            <section class="legal-section">
+                <h2>5. Data Retention</h2>
+                <p>We retain your data only as long as necessary:</p>
+                <ul>
+                    <li><strong>Active Account:</strong> Data is retained while your account is active</li>
+                    <li><strong>After Deletion:</strong> When you delete your account, all personal data is permanently removed within 30 days</li>
+                    <li><strong>Strava Disconnection:</strong> If you revoke access via Strava, we automatically delete your data</li>
+                </ul>
+            </section>
+            
+            <section class="legal-section">
+                <h2>6. Your Rights</h2>
+                <p>You have the following rights regarding your data:</p>
+                <ul>
+                    <li><strong>Access:</strong> View all data we store about you via your <a href="/settings">account settings</a></li>
+                    <li><strong>Export:</strong> Download a copy of your data in JSON format</li>
+                    <li><strong>Deletion:</strong> Permanently delete your account and all associated data</li>
+                    <li><strong>Disconnection:</strong> Disconnect your Strava account at any time</li>
+                </ul>
+                <p>To exercise these rights, visit your <a href="/settings">Settings page</a> or contact us at privacy@sweatbet.com.</p>
+            </section>
+            
+            <section class="legal-section">
+                <h2>7. Data Security</h2>
+                <p>We implement industry-standard security measures to protect your data:</p>
+                <ul>
+                    <li>Encrypted data transmission (HTTPS/TLS)</li>
+                    <li>Secure token storage</li>
+                    <li>Regular security audits</li>
+                    <li>Access controls and authentication</li>
+                </ul>
+                <p>While we strive to protect your information, no method of transmission over the Internet is 100% secure.</p>
+            </section>
+            
+            <section class="legal-section">
+                <h2>8. Strava Integration</h2>
+                <p>SweatBet uses the Strava API to access your fitness data. This integration is governed by:</p>
+                <ul>
+                    <li><a href="https://www.strava.com/legal/privacy" target="_blank" rel="noopener">Strava's Privacy Policy</a></li>
+                    <li><a href="https://www.strava.com/legal/api" target="_blank" rel="noopener">Strava's API Agreement</a></li>
+                </ul>
+                <p>You can revoke SweatBet's access to your Strava data at any time through your <a href="https://www.strava.com/settings/apps" target="_blank" rel="noopener">Strava Connected Apps settings</a>.</p>
+            </section>
+            
+            <section class="legal-section">
+                <h2>9. Children's Privacy</h2>
+                <p>SweatBet is not intended for users under 18 years of age. We do not knowingly collect personal information from children under 18.</p>
+            </section>
+            
+            <section class="legal-section">
+                <h2>10. Changes to This Policy</h2>
+                <p>We may update this Privacy Policy from time to time. We will notify you of significant changes by posting the new policy on this page and updating the "Last updated" date.</p>
+            </section>
+            
+            <section class="legal-section">
+                <h2>11. Contact Us</h2>
+                <p>If you have questions about this Privacy Policy or our data practices, please contact us:</p>
+                <ul>
+                    <li>Email: <a href="mailto:privacy@sweatbet.com">privacy@sweatbet.com</a></li>
+                </ul>
+            </section>
+        </div>
+        
+        <div class="legal-footer">
+            <a href="/" class="btn btn-secondary">← Back to Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
