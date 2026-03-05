@@ -21,25 +21,47 @@
         </a>
     </div>
 
+    {% if total_bets > 0 %}
+    <div class="dashboard-stats-bar">
+        <div class="mini-stat">
+            <span class="mini-stat-value">{{ total_bets }}</span>
+            <span class="mini-stat-label">Total Bets</span>
+        </div>
+        <div class="mini-stat">
+            <span class="mini-stat-value won-text">{{ won_bets }}</span>
+            <span class="mini-stat-label">Won</span>
+        </div>
+        <div class="mini-stat">
+            <span class="mini-stat-value">{{ active_bets|length }}</span>
+            <span class="mini-stat-label">Active</span>
+        </div>
+        {% if total_bets > 0 %}
+        <div class="mini-stat">
+            <span class="mini-stat-value highlight-text">{{ ((won_bets / total_bets) * 100)|int }}%</span>
+            <span class="mini-stat-label">Win Rate</span>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
     <div class="dashboard-grid">
         <div class="dashboard-section activities-section">
             <div class="section-header">
                 <h2>Recent Activities</h2>
                 <span class="badge">From Strava</span>
             </div>
-            
+
             {% if activities %}
             <div class="activities-list">
                 {% for activity in activities %}
                 <div class="activity-card">
                     <div class="activity-icon">
-                        {% if activity.type == 'Run' %}
-                        🏃
-                        {% elif activity.type == 'Ride' %}
-                        🚴
-                        {% else %}
-                        🏋️
-                        {% endif %}
+                        {% if activity.type == 'Run' %}🏃
+                        {% elif activity.type == 'Ride' %}🚴
+                        {% elif activity.type == 'Walk' %}🚶
+                        {% elif activity.type == 'Hike' %}🥾
+                        {% elif activity.type == 'Swim' %}🏊
+                        {% else %}🏋️{% endif %}
                     </div>
                     <div class="activity-details">
                         <h4 class="activity-name">{{ activity.name }}</h4>
@@ -72,14 +94,14 @@
             <div class="section-header">
                 <h2>Active Bets</h2>
                 {% if active_bets %}
-                <a href="/bets" class="nav-link">View All →</a>
+                <a href="/bets" class="nav-link">View All</a>
                 {% endif %}
             </div>
-            
+
             {% if active_bets %}
             <div class="active-bets-list">
                 {% for bet in active_bets %}
-                <div class="active-bet-item">
+                <a href="/bets/{{ bet.id }}" class="active-bet-item" style="text-decoration: none; color: inherit;">
                     <div class="active-bet-icon">
                         {% if bet.activity_type.value == 'Run' %}🏃
                         {% elif bet.activity_type.value == 'Ride' %}🚴
@@ -92,14 +114,15 @@
                         <div class="active-bet-title">{{ bet.title }}</div>
                         <div class="active-bet-meta">
                             {{ bet.activity_type.value }}
-                            {% if bet.distance_km %} • {{ "%.1f"|format(bet.distance_km) }} km{% endif %}
-                            {% if bet.wager_amount > 0 %} • ${{ "%.0f"|format(bet.wager_amount) }}{% endif %}
+                            {% if bet.distance_km %} | {{ "%.1f"|format(bet.distance_km) }} km{% endif %}
+                            {% if bet.wager_amount > 0 %} | {{ bet.wager_display }}{% endif %}
                         </div>
                     </div>
                     <div class="active-bet-deadline">
+                        <div class="countdown">{{ bet.time_remaining_display }}</div>
                         <div class="date">{{ bet.deadline.strftime('%b %d') }}</div>
                     </div>
-                </div>
+                </a>
                 {% endfor %}
             </div>
             {% else %}
@@ -114,4 +137,3 @@
     </div>
 </section>
 {% endblock %}
-

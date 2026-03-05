@@ -1,15 +1,8 @@
 """
 User settings and account management for SweatBet.
-
-Provides functionality for:
-- Viewing stored user data
-- Exporting data (JSON download)
-- Disconnecting Strava
-- Deleting account
 """
 
-import uuid
-import json
+import logging
 from datetime import datetime
 
 from fastapi import APIRouter, Request, Depends, HTTPException
@@ -18,51 +11,28 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from backend.fastapi.dependencies.database import get_sync_db
+from backend.fastapi.dependencies.auth import get_current_user
 from backend.fastapi.models.user import User, StravaToken
-from backend.fastapi.services.strava import strava_client
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# Templates
 templates = Jinja2Templates(directory="frontend/sweatbet/templates")
-
-
-async def get_current_user(request: Request, db: Session) -> User | None:
-    """Get the current authenticated user from session."""
-    user_id = request.session.get("user_id")
-    if not user_id:
-        return None
-    
-    try:
-        user_uuid = uuid.UUID(user_id)
-    except ValueError:
-        return None
-    
-    user = db.query(User).filter(User.id == user_uuid).first()
-    return user
 
 
 @router.get("/settings")
 async def settings_page(
     request: Request,
+    user: User = Depends(get_current_user),
     db: Session = Depends(get_sync_db)
 ):
-    """
-    Display the user settings page.
-    
-    Shows stored data and provides options for:
-    - Data export
-    - Account disconnection
-    - Account deletion
-    """
-    user = await get_current_user(request, db)
-    
+    """Display the user settings page."""
     if not user:
         return RedirectResponse(url="/")
-    
-    # Get user's token info (without exposing actual tokens)
+
     token = db.query(StravaToken).filter(StravaToken.user_id == user.id).first()
-    
+
     token_info = None
     if token:
         token_info = {
@@ -70,7 +40,7 @@ async def settings_page(
             "expires_at": datetime.fromtimestamp(token.expires_at).isoformat() if token.expires_at else None,
             "created_at": token.created_at.isoformat() if token.created_at else None
         }
-    
+
     return templates.TemplateResponse(
         "settings.html",
         {
@@ -84,23 +54,15 @@ async def settings_page(
 @router.get("/settings/export")
 async def export_user_data(
     request: Request,
+    user: User = Depends(get_current_user),
     db: Session = Depends(get_sync_db)
 ):
-    """
-    Export all user data as JSON.
-    
-    Provides a downloadable file containing all stored user information.
-    Required for Strava API compliance and GDPR-style data portability.
-    """
-    user = await get_current_user(request, db)
-    
+    """Export all user data as JSON. Required for Strava API and POPIA compliance."""
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    
-    # Get user's token info (without sensitive tokens)
+
     token = db.query(StravaToken).filter(StravaToken.user_id == user.id).first()
-    
-    # Compile user data
+
     export_data = {
         "export_date": datetime.utcnow().isoformat(),
         "user": {
@@ -119,8 +81,7 @@ async def export_user_data(
             "connection_created_at": token.created_at.isoformat() if token and token.created_at else None
         }
     }
-    
-    # Return as downloadable JSON
+
     return JSONResponse(
         content=export_data,
         media_type="application/json",
@@ -133,52 +94,33 @@ async def export_user_data(
 @router.post("/settings/disconnect")
 async def disconnect_strava(
     request: Request,
+    user: User = Depends(get_current_user),
     db: Session = Depends(get_sync_db)
 ):
-    """
-    Disconnect Strava from the user's account.
-    
-    Removes stored tokens but keeps the user account.
-    User can reconnect later via OAuth.
-    """
-    user = await get_current_user(request, db)
-    
+    """Disconnect Strava from the user's account."""
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    
-    # Delete user's Strava tokens
+
     db.query(StravaToken).filter(StravaToken.user_id == user.id).delete()
     db.commit()
-    
+
+    logger.info(f"User {user.id} disconnected Strava")
     return RedirectResponse(url="/settings?disconnected=true", status_code=302)
 
 
 @router.post("/settings/delete")
 async def delete_account(
     request: Request,
+    user: User = Depends(get_current_user),
     db: Session = Depends(get_sync_db)
 ):
-    """
-    Permanently delete the user's account and all associated data.
-    
-    This action is irreversible and removes:
-    - User profile
-    - All Strava tokens
-    - Any associated bets (future)
-    
-    Required for Strava API compliance.
-    """
-    user = await get_current_user(request, db)
-    
+    """Permanently delete the user's account and all associated data."""
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    
-    # Delete user (cascades to tokens due to relationship config)
+
+    logger.info(f"Deleting account for user {user.id}")
     db.delete(user)
     db.commit()
-    
-    # Clear session
-    request.session.clear()
-    
-    return RedirectResponse(url="/?deleted=true", status_code=302)
 
+    request.session.clear()
+    return RedirectResponse(url="/?deleted=true", status_code=302)

@@ -5,7 +5,7 @@
 {% block content %}
 <section class="bets-page">
     <div class="page-header">
-        <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+        <a href="/dashboard" class="back-link">&larr; Back to Dashboard</a>
         <div class="page-header-content">
             <div>
                 <h1>My <span class="highlight">Bets</span></h1>
@@ -22,11 +22,11 @@
                 <h2>Active Bets</h2>
                 <span class="bet-count">{{ active_bets | length }}</span>
             </div>
-            
+
             {% if active_bets %}
             <div class="bets-grid">
                 {% for bet in active_bets %}
-                <div class="bet-card {{ 'pending' if bet.status.value == 'pending' else 'active' }}">
+                <a href="/bets/{{ bet.id }}" class="bet-card {{ 'pending' if bet.status.value == 'pending' else 'active' }}" style="text-decoration: none; color: inherit;">
                     <div class="bet-card-header">
                         <div class="bet-type-icon">
                             {% if bet.activity_type.value == 'Run' %}🏃
@@ -38,13 +38,13 @@
                         </div>
                         <span class="bet-status-badge {{ bet.status.value }}">{{ bet.status.value | title }}</span>
                     </div>
-                    
+
                     <h3 class="bet-title">{{ bet.title }}</h3>
-                    
+
                     {% if bet.description %}
                     <p class="bet-description">{{ bet.description }}</p>
                     {% endif %}
-                    
+
                     <div class="bet-requirements">
                         <div class="requirement">
                             <span class="requirement-label">Activity</span>
@@ -63,24 +63,18 @@
                         </div>
                         {% endif %}
                     </div>
-                    
+
                     <div class="bet-footer">
                         <div class="bet-deadline">
-                            <span class="deadline-label">Deadline:</span>
-                            <span class="deadline-value">{{ bet.deadline.strftime('%b %d, %Y at %H:%M') }}</span>
+                            <span class="deadline-label">{{ bet.time_remaining_display }}</span>
+                            <span class="deadline-value">{{ bet.deadline.strftime('%b %d, %Y') }}</span>
                         </div>
-                        
+
                         {% if bet.wager_amount > 0 %}
-                        <div class="bet-wager">${{ "%.0f"|format(bet.wager_amount) }}</div>
+                        <div class="bet-wager">{{ bet.wager_display }}</div>
                         {% endif %}
                     </div>
-                    
-                    <form action="/bets/{{ bet.id }}/cancel" method="POST" class="bet-actions">
-                        <button type="submit" class="btn btn-cancel" onclick="return confirm('Are you sure you want to cancel this bet?')">
-                            Cancel Bet
-                        </button>
-                    </form>
-                </div>
+                </a>
                 {% endfor %}
             </div>
             {% else %}
@@ -100,23 +94,26 @@
                 <h2>Completed Bets</h2>
                 <span class="bet-count">{{ completed_bets | length }}</span>
             </div>
-            
+
             <div class="bets-grid">
                 {% for bet in completed_bets %}
-                <div class="bet-card completed {{ bet.status.value }}">
+                <a href="/bets/{{ bet.id }}" class="bet-card completed {{ bet.status.value }}" style="text-decoration: none; color: inherit;">
                     <div class="bet-card-header">
                         <div class="bet-type-icon">
                             {% if bet.activity_type.value == 'Run' %}🏃
                             {% elif bet.activity_type.value == 'Ride' %}🚴
+                            {% elif bet.activity_type.value == 'Walk' %}🚶
+                            {% elif bet.activity_type.value == 'Hike' %}🥾
+                            {% elif bet.activity_type.value == 'Swim' %}🏊
                             {% else %}🏋️{% endif %}
                         </div>
                         <span class="bet-status-badge {{ bet.status.value }}">
-                            {% if bet.status.value == 'won' %}✓ Won{% else %}✗ Lost{% endif %}
+                            {% if bet.status.value == 'won' %}Won{% else %}Lost{% endif %}
                         </span>
                     </div>
-                    
+
                     <h3 class="bet-title">{{ bet.title }}</h3>
-                    
+
                     <div class="bet-requirements">
                         <div class="requirement">
                             <span class="requirement-label">Activity</span>
@@ -129,13 +126,13 @@
                         </div>
                         {% endif %}
                     </div>
-                    
+
                     <div class="bet-footer">
                         {% if bet.wager_amount > 0 %}
-                        <div class="bet-wager {{ bet.status.value }}">${{ "%.0f"|format(bet.wager_amount) }}</div>
+                        <div class="bet-wager {{ bet.status.value }}">{{ bet.wager_display }}</div>
                         {% endif %}
                     </div>
-                </div>
+                </a>
                 {% endfor %}
             </div>
         </div>
@@ -148,7 +145,7 @@
                 <h2>Cancelled Bets</h2>
                 <span class="bet-count">{{ cancelled_bets | length }}</span>
             </div>
-            
+
             <div class="bets-grid cancelled-grid">
                 {% for bet in cancelled_bets %}
                 <div class="bet-card cancelled">
@@ -162,4 +159,3 @@
     </div>
 </section>
 {% endblock %}
-

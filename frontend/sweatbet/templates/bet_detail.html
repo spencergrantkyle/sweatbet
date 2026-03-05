@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}{{ bet.title }} - SweatBet{% endblock %}
+
+{% block content %}
+<section class="bet-detail-page">
+    <div class="page-header">
+        <a href="/bets" class="back-link">&larr; Back to My Bets</a>
+        <div class="bet-detail-header">
+            <div class="bet-detail-title-row">
+                <div class="bet-type-icon large">
+                    {% if bet.activity_type.value == 'Run' %}🏃
+                    {% elif bet.activity_type.value == 'Ride' %}🚴
+                    {% elif bet.activity_type.value == 'Walk' %}🚶
+                    {% elif bet.activity_type.value == 'Hike' %}🥾
+                    {% elif bet.activity_type.value == 'Swim' %}🏊
+                    {% else %}🏋️{% endif %}
+                </div>
+                <div>
+                    <h1>{{ bet.title }}</h1>
+                    <span class="bet-status-badge {{ bet.status.value }}">
+                        {% if bet.status.value == 'active' %}Active
+                        {% elif bet.status.value == 'pending' %}Pending
+                        {% elif bet.status.value == 'won' %}Won
+                        {% elif bet.status.value == 'lost' %}Lost
+                        {% elif bet.status.value == 'cancelled' %}Cancelled
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if bet.description %}
+    <p class="bet-detail-description">{{ bet.description }}</p>
+    {% endif %}
+
+    {% if bet.status.value == 'active' or bet.status.value == 'pending' %}
+    <div class="bet-countdown-card">
+        <div class="countdown-label">Time Remaining</div>
+        <div class="countdown-value">{{ bet.time_remaining_display }}</div>
+        <div class="countdown-deadline">Deadline: {{ bet.deadline.strftime('%B %d, %Y at %H:%M') }}</div>
+    </div>
+    {% endif %}
+
+    {% if bet.status.value == 'won' %}
+    <div class="bet-result-card won">
+        <div class="result-icon">🏆</div>
+        <div class="result-text">
+            <h3>Bet Won!</h3>
+            <p>You completed this challenge. Keep up the great work!</p>
+            {% if bet.verified_at %}
+            <p class="result-meta">Verified on {{ bet.verified_at.strftime('%B %d, %Y at %H:%M') }}</p>
+            {% endif %}
+        </div>
+    </div>
+    {% elif bet.status.value == 'lost' %}
+    <div class="bet-result-card lost">
+        <div class="result-icon">💔</div>
+        <div class="result-text">
+            <h3>Bet Lost</h3>
+            <p>The deadline passed without a qualifying activity. Don't give up - create a new bet!</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="bet-detail-grid">
+        <div class="detail-card">
+            <h3>Requirements</h3>
+            <div class="detail-rows">
+                <div class="detail-row">
+                    <span class="detail-label">Activity Type</span>
+                    <span class="detail-value">{{ bet.activity_type.value }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Distance</span>
+                    <span class="detail-value">{{ bet.distance_display }}</span>
+                </div>
+                {% if bet.time_seconds %}
+                <div class="detail-row">
+                    <span class="detail-label">Time Limit</span>
+                    <span class="detail-value">{{ bet.time_display }}</span>
+                </div>
+                {% endif %}
+                <div class="detail-row">
+                    <span class="detail-label">Deadline</span>
+                    <span class="detail-value">{{ bet.deadline.strftime('%b %d, %Y %H:%M') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-card">
+            <h3>Stakes</h3>
+            <div class="detail-rows">
+                <div class="detail-row">
+                    <span class="detail-label">Wager</span>
+                    <span class="detail-value wager">{{ bet.wager_display }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Bet Type</span>
+                    <span class="detail-value">{{ bet.bet_type.value | title if bet.bet_type else 'Individual' }}</span>
+                </div>
+                {% if bet.stake_recipient_type %}
+                <div class="detail-row">
+                    <span class="detail-label">On Failure</span>
+                    <span class="detail-value">
+                        {% if bet.stake_recipient_type.value == 'sweatbet' %}Goes to SweatBet
+                        {% elif bet.stake_recipient_type.value == 'friend' %}Goes to Friend
+                        {% elif bet.stake_recipient_type.value == 'pbo' %}Goes to Charity
+                        {% endif %}
+                    </span>
+                </div>
+                {% endif %}
+                <div class="detail-row">
+                    <span class="detail-label">Created</span>
+                    <span class="detail-value">{{ bet.created_at.strftime('%b %d, %Y') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if bet.status.value in ('active', 'pending') %}
+    <div class="bet-detail-actions">
+        <form action="/bets/{{ bet.id }}/cancel" method="POST">
+            <button type="submit" class="btn btn-cancel" onclick="return confirm('Are you sure you want to cancel this bet?')">
+                Cancel Bet
+            </button>
+        </form>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

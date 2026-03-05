@@ -13,11 +13,25 @@ from backend.fastapi.dependencies.database import Base
 
 class BetStatus(str, PyEnum):
     """Status of a bet."""
-    PENDING = "pending"      # Bet created, waiting for deadline
-    ACTIVE = "active"        # Bet is in progress
+    PENDING = "pending"      # Bet created, awaiting acceptance (for challenges)
+    ACTIVE = "active"        # Bet is live and tracking activities
     WON = "won"             # User completed the challenge
     LOST = "lost"           # User failed to complete
     CANCELLED = "cancelled"  # Bet was cancelled
+
+
+class BetType(str, PyEnum):
+    """Type of bet."""
+    INDIVIDUAL = "individual"
+    CHALLENGE = "challenge"
+    GROUP = "group"
+
+
+class StakeRecipientType(str, PyEnum):
+    """Where the stake goes on failure."""
+    SWEATBET = "sweatbet"
+    FRIEND = "friend"
+    PBO = "pbo"
 
 
 class ActivityType(str, PyEnum):
@@ -35,30 +49,36 @@ class Bet(Base):
     __tablename__ = "bets"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    
+
     # Creator relationship
     creator_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    
+
     # Bet details
     title = Column(String(200), nullable=False)
     description = Column(String(1000), nullable=True)
+    bet_type = Column(Enum(BetType), nullable=False, default=BetType.INDIVIDUAL)
     wager_amount = Column(Float, nullable=False, default=0.0)
-    
+    currency = Column(String(3), nullable=False, default="ZAR")
+
+    # Stake recipient on failure
+    stake_recipient_type = Column(Enum(StakeRecipientType), nullable=True, default=StakeRecipientType.SWEATBET)
+    stake_recipient_id = Column(UUID(as_uuid=True), nullable=True)
+
     # Challenge requirements
     activity_type = Column(Enum(ActivityType), nullable=False)
     distance_km = Column(Float, nullable=True)  # Required distance in kilometers
     time_seconds = Column(Integer, nullable=True)  # Optional time limit in seconds
-    
+
     # Timeline
     deadline = Column(DateTime, nullable=False)
-    
-    # Status tracking
-    status = Column(Enum(BetStatus), nullable=False, default=BetStatus.PENDING)
-    
+
+    # Status tracking - individual bets start as ACTIVE immediately
+    status = Column(Enum(BetStatus), nullable=False, default=BetStatus.ACTIVE)
+
     # Verification
     verified_activity_id = Column(String, nullable=True)  # Strava activity ID that verified this bet
     verified_at = Column(DateTime, nullable=True)
-    
+
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -83,6 +103,34 @@ class Bet(Base):
         return int(delta.total_seconds())
 
     @property
+    def time_remaining_display(self) -> str:
+        """Human-readable time remaining."""
+        seconds = self.time_remaining
+        if seconds <= 0:
+            return "Expired"
+        days, remainder = divmod(seconds, 86400)
+        hours, remainder = divmod(remainder, 3600)
+        minutes, _ = divmod(remainder, 60)
+        if days > 0:
+            return f"{days}d {hours}h"
+        if hours > 0:
+            return f"{hours}h {minutes}m"
+        return f"{minutes}m"
+
+    @property
+    def currency_symbol(self) -> str:
+        """Get currency symbol for display."""
+        symbols = {"ZAR": "R", "USD": "$", "EUR": "E", "GBP": "£"}
+        return symbols.get(self.currency, self.currency)
+
+    @property
+    def wager_display(self) -> str:
+        """Format wager for display."""
+        if self.wager_amount and self.wager_amount > 0:
+            return f"{self.currency_symbol}{self.wager_amount:.0f}"
+        return "No wager"
+
+    @property
     def distance_display(self) -> str:
         """Format distance for display."""
         if self.distance_km:
@@ -99,4 +147,3 @@ class Bet(Base):
                 return f"{hours}h {minutes}m"
             return f"{minutes}m"
         return "No time limit"
-

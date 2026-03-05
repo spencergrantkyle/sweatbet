@@ -1,7 +1,6 @@
 /* SweatBet - Fitness Betting Platform Styles */
 
 :root {
-    /* Strava-inspired color palette with dark athletic theme */
     --strava-orange: #FC4C02;
     --strava-orange-dark: #E04400;
     --bg-dark: #0D0D0D;
@@ -17,15 +16,8 @@
     --gradient-end: #FF6B35;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 
 body {
     font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -40,9 +32,7 @@ body {
 /* Navigation */
 .navbar {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 0; left: 0; right: 0;
     z-index: 100;
     padding: 1rem 2rem;
     background: rgba(13, 13, 13, 0.9);
@@ -66,37 +56,38 @@ body {
     color: var(--text-primary);
 }
 
-.logo-icon {
-    font-size: 1.5rem;
-}
+.logo-icon { font-size: 1.5rem; }
+.logo-text { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
 
-.logo-text {
-    font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-}
-
-.nav-links {
-    display: flex;
-    gap: 2rem;
-}
-
+.nav-links { display: flex; gap: 2rem; }
 .nav-link {
     color: var(--text-secondary);
     text-decoration: none;
     font-weight: 500;
     transition: color 0.2s;
 }
+.nav-link:hover { color: var(--text-primary); }
 
-.nav-link:hover {
-    color: var(--text-primary);
+/* Mobile Menu */
+.mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+}
+.mobile-menu-btn span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--text-primary);
+    transition: all 0.3s;
 }
 
 /* Main Content */
-.main-content {
-    flex: 1;
-    padding-top: 80px;
-}
+.main-content { flex: 1; padding-top: 80px; }
 
 /* Hero Section */
 .hero {
@@ -132,11 +123,7 @@ body {
     max-width: 500px;
 }
 
-.cta-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
+.cta-section { display: flex; flex-direction: column; gap: 1rem; }
 
 .strava-btn {
     display: inline-flex;
@@ -161,22 +148,11 @@ body {
     box-shadow: 0 6px 30px rgba(252, 76, 2, 0.4);
 }
 
-.strava-logo {
-    width: 24px;
-    height: 24px;
-}
+.strava-logo { width: 24px; height: 24px; }
+.cta-subtext { color: var(--text-muted); font-size: 0.875rem; }
 
-.cta-subtext {
-    color: var(--text-muted);
-    font-size: 0.875rem;
-}
-
-/* Hero Visual / Stats */
-.hero-visual {
-    display: flex;
-    justify-content: center;
-}
-
+/* Stats Card */
+.hero-visual { display: flex; justify-content: center; }
 .stats-card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -187,12 +163,7 @@ body {
     gap: 2rem;
 }
 
-.stat {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
+.stat { display: flex; flex-direction: column; gap: 0.25rem; }
 .stat-value {
     font-size: 3rem;
     font-weight: 800;
@@ -201,18 +172,10 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
+.stat-label { color: var(--text-secondary); font-size: 1rem; }
 
-.stat-label {
-    color: var(--text-secondary);
-    font-size: 1rem;
-}
-
-/* How It Works Section */
-.how-it-works {
-    background: var(--bg-card);
-    padding: 6rem 2rem;
-}
-
+/* How It Works */
+.how-it-works { background: var(--bg-card); padding: 6rem 2rem; }
 .section-title {
     text-align: center;
     font-size: 2.5rem;
@@ -229,42 +192,14 @@ body {
     margin: 0 auto;
 }
 
-.step {
-    text-align: center;
-    padding: 2rem;
-}
+.step { text-align: center; padding: 2rem; }
+.step-number { font-size: 3rem; font-weight: 800; color: var(--strava-orange); opacity: 0.3; margin-bottom: 1rem; }
+.step h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; }
+.step p { color: var(--text-secondary); font-size: 0.95rem; }
 
-.step-number {
-    font-size: 3rem;
-    font-weight: 800;
-    color: var(--strava-orange);
-    opacity: 0.3;
-    margin-bottom: 1rem;
-}
-
-.step h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-}
-
-.step p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-}
-
-/* Bet Types Section */
-.bet-types {
-    padding: 6rem 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.bet-cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-}
+/* Bet Types */
+.bet-types { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+.bet-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
 
 .bet-card {
     background: var(--bg-card);
@@ -276,30 +211,11 @@ body {
     position: relative;
 }
 
-.bet-card:hover {
-    background: var(--bg-card-hover);
-    transform: translateY(-4px);
-}
-
-.bet-card.featured {
-    border-color: var(--strava-orange);
-    box-shadow: 0 0 40px rgba(252, 76, 2, 0.15);
-}
-
-.bet-icon {
-    font-size: 3rem;
-    margin-bottom: 1.5rem;
-}
-
-.bet-card h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-}
-
-.bet-card p {
-    color: var(--text-secondary);
-}
+.bet-card:hover { background: var(--bg-card-hover); transform: translateY(-4px); }
+.bet-card.featured { border-color: var(--strava-orange); box-shadow: 0 0 40px rgba(252, 76, 2, 0.15); }
+.bet-icon { font-size: 3rem; margin-bottom: 1.5rem; }
+.bet-card h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.75rem; }
+.bet-card p { color: var(--text-secondary); }
 
 .badge {
     display: inline-block;
@@ -312,37 +228,46 @@ body {
     margin-top: 1rem;
 }
 
-/* Dashboard Styles */
-.dashboard {
-    max-width: 1200px;
+/* Trust Section */
+.trust-section { padding: 3rem 2rem; background: var(--bg-card); border-top: 1px solid var(--border-color); }
+.trust-container {
+    max-width: 800px;
     margin: 0 auto;
-    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
 }
+.trust-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+.trust-icon { font-size: 1.25rem; }
+
+/* Dashboard */
+.dashboard { max-width: 1200px; margin: 0 auto; padding: 2rem; }
 
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
-.user-welcome {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
+.user-welcome { display: flex; align-items: center; gap: 1.5rem; }
 
 .user-avatar {
-    width: 64px;
-    height: 64px;
+    width: 64px; height: 64px;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid var(--strava-orange);
 }
 
 .user-avatar-placeholder {
-    width: 64px;
-    height: 64px;
+    width: 64px; height: 64px;
     border-radius: 50%;
     background: var(--strava-orange);
     display: flex;
@@ -352,15 +277,31 @@ body {
     font-weight: 700;
 }
 
-.user-info h1 {
-    font-size: 2rem;
-    font-weight: 700;
+.user-info h1 { font-size: 2rem; font-weight: 700; }
+.user-subtitle { color: var(--text-secondary); }
+
+/* Dashboard Stats Bar */
+.dashboard-stats-bar {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+}
+.mini-stat { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
+.mini-stat-value { font-size: 1.5rem; font-weight: 700; }
+.mini-stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.won-text { color: var(--accent-green); }
+.highlight-text {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.user-subtitle {
-    color: var(--text-secondary);
-}
-
+/* Buttons */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -375,30 +316,13 @@ body {
     font-size: 1rem;
 }
 
-.btn-primary {
-    background: var(--strava-orange);
-    color: white;
-}
+.btn-primary { background: var(--strava-orange); color: white; }
+.btn-primary:hover { background: var(--strava-orange-dark); }
+.btn-secondary { background: var(--bg-card-hover); color: var(--text-primary); border: 1px solid var(--border-color); }
+.btn-secondary:hover { background: var(--border-color); }
 
-.btn-primary:hover {
-    background: var(--strava-orange-dark);
-}
-
-.btn-secondary {
-    background: var(--bg-card-hover);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-}
-
-.btn-secondary:hover {
-    background: var(--border-color);
-}
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 2rem;
-}
+/* Dashboard Grid */
+.dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
 
 .dashboard-section {
     background: var(--bg-card);
@@ -413,19 +337,10 @@ body {
     gap: 1rem;
     margin-bottom: 1.5rem;
 }
-
-.section-header h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
-}
+.section-header h2 { font-size: 1.25rem; font-weight: 600; }
 
 /* Activities List */
-.activities-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
+.activities-list { display: flex; flex-direction: column; gap: 1rem; }
 .activity-card {
     display: flex;
     align-items: center;
@@ -435,15 +350,11 @@ body {
     border-radius: 12px;
     transition: background 0.2s;
 }
-
-.activity-card:hover {
-    background: var(--bg-card-hover);
-}
+.activity-card:hover { background: var(--bg-card-hover); }
 
 .activity-icon {
     font-size: 2rem;
-    width: 50px;
-    height: 50px;
+    width: 50px; height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -451,65 +362,49 @@ body {
     border-radius: 12px;
 }
 
-.activity-details {
-    flex: 1;
-}
-
-.activity-name {
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-}
-
-.activity-meta {
-    display: flex;
-    gap: 1rem;
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-}
-
-.activity-stats {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.stat-item {
-    text-align: right;
-}
-
-.stat-item .stat-value {
-    font-size: 1.25rem;
-    font-weight: 700;
-    background: none;
-    -webkit-text-fill-color: var(--text-primary);
-}
-
-.stat-item .stat-unit {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    margin-left: 0.25rem;
-}
+.activity-details { flex: 1; }
+.activity-name { font-weight: 600; margin-bottom: 0.25rem; }
+.activity-meta { display: flex; gap: 1rem; font-size: 0.875rem; color: var(--text-secondary); }
+.activity-stats { display: flex; gap: 1.5rem; }
+.stat-item { text-align: right; }
+.stat-item .stat-value { font-size: 1.25rem; font-weight: 700; background: none; -webkit-text-fill-color: var(--text-primary); }
+.stat-item .stat-unit { font-size: 0.75rem; color: var(--text-secondary); margin-left: 0.25rem; }
 
 /* Empty State */
-.empty-state {
-    text-align: center;
-    padding: 3rem 2rem;
-    color: var(--text-secondary);
+.empty-state { text-align: center; padding: 3rem 2rem; color: var(--text-secondary); }
+.empty-icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.5; }
+.empty-state h3 { color: var(--text-primary); margin-bottom: 0.5rem; }
+.empty-state p { margin-bottom: 1.5rem; }
+
+/* Active Bets in Dashboard */
+.active-bets-list { display: flex; flex-direction: column; gap: 1rem; }
+.active-bet-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-dark);
+    border-radius: 12px;
+    transition: background 0.2s;
+}
+.active-bet-item:hover { background: var(--bg-card-hover); }
+
+.active-bet-icon {
+    font-size: 1.5rem;
+    width: 44px; height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    border-radius: 10px;
 }
 
-.empty-icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    opacity: 0.5;
-}
-
-.empty-state h3 {
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-}
-
-.empty-state p {
-    margin-bottom: 1.5rem;
-}
+.active-bet-info { flex: 1; }
+.active-bet-title { font-weight: 600; margin-bottom: 0.25rem; }
+.active-bet-meta { font-size: 0.85rem; color: var(--text-secondary); }
+.active-bet-deadline { text-align: right; }
+.active-bet-deadline .countdown { font-weight: 600; color: var(--strava-orange); }
+.active-bet-deadline .date { font-size: 0.8rem; color: var(--text-muted); }
 
 /* Error Banner */
 .error-banner {
@@ -522,6 +417,7 @@ body {
     padding: 1rem 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(255, 68, 68, 0.3);
+    z-index: 200;
 }
 
 /* Footer */
@@ -532,217 +428,46 @@ body {
     margin-top: auto;
 }
 
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: center;
-    color: var(--text-muted);
-}
+.footer-container { max-width: 1200px; margin: 0 auto; text-align: center; color: var(--text-muted); }
+.footer-links { margin-bottom: 0.5rem; }
+.footer-link { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+.footer-link:hover { color: var(--text-primary); }
+.footer-divider { margin: 0 0.75rem; color: var(--text-muted); }
+.footer-powered { margin: 0.5rem 0; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+.powered-text { color: var(--text-muted); font-size: 0.8rem; }
+.strava-wordmark { color: var(--strava-orange); }
+.footer-copy { font-size: 0.8rem; }
 
-.footer-links {
-    margin-bottom: 0.75rem;
-}
-
-.footer-link {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.2s;
-}
-
-.footer-link:hover {
-    color: var(--text-primary);
-}
-
-.footer-divider {
-    margin: 0 0.75rem;
-    color: var(--text-muted);
-}
-
-/* Legal Pages (Privacy & Terms) */
-.legal-page {
-    padding: 2rem 0 4rem;
-}
-
-.legal-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 2rem;
-}
-
-.legal-header {
-    margin-bottom: 3rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
+/* Legal Pages */
+.legal-page { padding: 2rem 0 4rem; }
+.legal-container { max-width: 800px; margin: 0 auto; padding: 0 2rem; }
+.legal-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border-color); }
 .legal-title {
-    font-size: 3rem;
-    font-weight: 800;
-    letter-spacing: -1px;
-    margin-bottom: 0.5rem;
+    font-size: 3rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 0.5rem;
     background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
+.legal-updated { color: var(--text-muted); font-size: 0.9rem; }
+.legal-content { line-height: 1.8; }
+.legal-section { margin-bottom: 2.5rem; }
+.legal-section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary); }
+.legal-section h3 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.75rem; color: var(--text-primary); }
+.legal-section p { color: var(--text-secondary); margin-bottom: 1rem; }
+.legal-section ul, .legal-section ol { color: var(--text-secondary); margin: 1rem 0 1rem 1.5rem; }
+.legal-section li { margin-bottom: 0.5rem; }
+.legal-section li strong { color: var(--text-primary); }
+.legal-section a { color: var(--strava-orange); text-decoration: none; transition: color 0.2s; }
+.legal-section a:hover { color: var(--gradient-end); text-decoration: underline; }
+.legal-footer { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); }
 
-.legal-updated {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-}
-
-.legal-content {
-    line-height: 1.8;
-}
-
-.legal-section {
-    margin-bottom: 2.5rem;
-}
-
-.legal-section h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: var(--text-primary);
-}
-
-.legal-section h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 1.5rem 0 0.75rem;
-    color: var(--text-primary);
-}
-
-.legal-section p {
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-}
-
-.legal-section ul,
-.legal-section ol {
-    color: var(--text-secondary);
-    margin: 1rem 0 1rem 1.5rem;
-}
-
-.legal-section li {
-    margin-bottom: 0.5rem;
-}
-
-.legal-section li strong {
-    color: var(--text-primary);
-}
-
-.legal-section a {
-    color: var(--strava-orange);
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.legal-section a:hover {
-    color: var(--gradient-end);
-    text-decoration: underline;
-}
-
-.legal-footer {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border-color);
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .hero {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 3rem;
-    }
-    
-    .hero-subtitle {
-        margin: 0 auto 2.5rem;
-    }
-    
-    .cta-section {
-        align-items: center;
-    }
-    
-    .steps {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .bet-cards {
-        grid-template-columns: 1fr;
-        max-width: 400px;
-        margin: 0 auto;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 640px) {
-    .hero-title {
-        font-size: 2.5rem;
-    }
-    
-    .steps {
-        grid-template-columns: 1fr;
-    }
-    
-    .dashboard-header {
-        flex-direction: column;
-        gap: 1.5rem;
-        text-align: center;
-    }
-    
-    .user-welcome {
-        flex-direction: column;
-    }
-}
-
-/* Bet Create Page Styles */
-.bet-create-page,
-.bets-page {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-}
-
-.page-header {
-    margin-bottom: 2.5rem;
-}
-
-.back-link {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-size: 0.9rem;
-    display: inline-block;
-    margin-bottom: 1rem;
-    transition: color 0.2s;
-}
-
-.back-link:hover {
-    color: var(--text-primary);
-}
-
-.page-header h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 0.5rem;
-}
-
-.page-subtitle {
-    color: var(--text-secondary);
-    font-size: 1.1rem;
-}
-
-.page-header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-}
+/* Bet Create & Bets Page */
+.bet-create-page, .bets-page { max-width: 800px; margin: 0 auto; padding: 2rem; }
+.page-header { margin-bottom: 2.5rem; }
+.back-link { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; display: inline-block; margin-bottom: 1rem; transition: color 0.2s; }
+.back-link:hover { color: var(--text-primary); }
+.page-header h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+.page-subtitle { color: var(--text-secondary); font-size: 1.1rem; }
+.page-header-content { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
 
 /* Error Message */
 .error-message {
@@ -756,46 +481,20 @@ body {
     align-items: center;
     gap: 0.75rem;
 }
-
-.error-icon {
-    font-size: 1.25rem;
-}
+.error-icon { font-size: 1.25rem; }
 
 /* Form Styles */
-.bet-form {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
+.bet-form { display: flex; flex-direction: column; gap: 2rem; }
 .form-section {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 20px;
     padding: 2rem;
 }
-
-.form-section h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    color: var(--text-primary);
-}
-
-.form-group {
-    margin-bottom: 1.25rem;
-}
-
-.form-group:last-child {
-    margin-bottom: 0;
-}
-
-.form-group label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    color: var(--text-primary);
-}
+.form-section h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary); }
+.form-group { margin-bottom: 1.25rem; }
+.form-group:last-child { margin-bottom: 0; }
+.form-group label { display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-primary); }
 
 .form-input {
     width: 100%;
@@ -808,21 +507,9 @@ body {
     font-family: inherit;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
-
-.form-input:focus {
-    outline: none;
-    border-color: var(--strava-orange);
-    box-shadow: 0 0 0 3px rgba(252, 76, 2, 0.15);
-}
-
-.form-input::placeholder {
-    color: var(--text-muted);
-}
-
-.form-textarea {
-    resize: vertical;
-    min-height: 100px;
-}
+.form-input:focus { outline: none; border-color: var(--strava-orange); box-shadow: 0 0 0 3px rgba(252, 76, 2, 0.15); }
+.form-input::placeholder { color: var(--text-muted); }
+.form-textarea { resize: vertical; min-height: 100px; }
 
 .form-select {
     appearance: none;
@@ -833,51 +520,15 @@ body {
     cursor: pointer;
 }
 
-.form-hint {
-    display: block;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-top: 0.4rem;
-}
+.form-hint { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.input-with-prefix { position: relative; }
+.input-prefix { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-weight: 500; }
+.form-input.has-prefix { padding-left: 2rem; }
+.form-actions { display: flex; justify-content: flex-end; gap: 1rem; padding-top: 1rem; }
 
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-}
-
-.input-with-prefix {
-    position: relative;
-}
-
-.input-prefix {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-secondary);
-    font-weight: 500;
-}
-
-.form-input.has-prefix {
-    padding-left: 2rem;
-}
-
-/* Form Actions */
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    padding-top: 1rem;
-}
-
-/* Bets List Page Styles */
-.bets-sections {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-}
-
+/* Bets List */
+.bets-sections { display: flex; flex-direction: column; gap: 3rem; }
 .bets-section {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -894,133 +545,55 @@ body {
     font-weight: 600;
 }
 
-.bets-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.25rem;
-}
+.bets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+.cancelled-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
 
-.cancelled-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-}
-
-/* Bet Card Styles */
+/* Bet Card in Lists */
 .bet-card {
     background: var(--bg-dark);
     border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 1.25rem;
     transition: all 0.2s;
+    display: block;
 }
+.bet-card:hover { border-color: var(--strava-orange); transform: translateY(-2px); }
+.bet-card.cancelled { opacity: 0.6; }
+.bet-card.cancelled:hover { transform: none; border-color: var(--border-color); }
 
-.bet-card:hover {
-    border-color: var(--strava-orange);
-    transform: translateY(-2px);
-}
-
-.bet-card.cancelled {
-    opacity: 0.6;
-}
-
-.bet-card.cancelled:hover {
-    transform: none;
-    border-color: var(--border-color);
-}
-
-.bet-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
+.bet-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
 
 .bet-type-icon {
     font-size: 1.75rem;
-    width: 48px;
-    height: 48px;
+    width: 48px; height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--bg-card);
     border-radius: 12px;
 }
+.bet-type-icon.large { width: 64px; height: 64px; font-size: 2.5rem; }
 
 .bet-status-badge {
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.75rem; font-weight: 600;
     padding: 0.25rem 0.75rem;
     border-radius: 50px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+.bet-status-badge.pending { background: rgba(252, 76, 2, 0.15); color: var(--strava-orange); }
+.bet-status-badge.active { background: rgba(0, 212, 106, 0.15); color: var(--accent-green); }
+.bet-status-badge.won { background: var(--accent-green); color: var(--bg-dark); }
+.bet-status-badge.lost { background: var(--accent-red); color: white; }
+.bet-status-badge.cancelled { background: var(--bg-card); color: var(--text-muted); }
 
-.bet-status-badge.pending {
-    background: rgba(252, 76, 2, 0.15);
-    color: var(--strava-orange);
-}
+.bet-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; line-height: 1.3; }
+.bet-description { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.5; }
 
-.bet-status-badge.active {
-    background: rgba(0, 212, 106, 0.15);
-    color: var(--accent-green);
-}
-
-.bet-status-badge.won {
-    background: var(--accent-green);
-    color: var(--bg-dark);
-}
-
-.bet-status-badge.lost {
-    background: var(--accent-red);
-    color: white;
-}
-
-.bet-status-badge.cancelled {
-    background: var(--bg-card);
-    color: var(--text-muted);
-}
-
-.bet-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-}
-
-.bet-description {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-    line-height: 1.5;
-}
-
-.bet-requirements {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-}
-
-.requirement {
-    background: var(--bg-card);
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-}
-
-.requirement-label {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.requirement-value {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-primary);
-}
+.bet-requirements { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
+.requirement { background: var(--bg-card); padding: 0.5rem 0.75rem; border-radius: 8px; display: flex; flex-direction: column; gap: 0.15rem; }
+.requirement-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.requirement-value { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
 
 .bet-footer {
     display: flex;
@@ -1031,40 +604,13 @@ body {
     margin-top: 0.5rem;
 }
 
-.bet-deadline {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-}
-
-.deadline-label {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-}
-
-.deadline-value {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-}
-
-.bet-wager {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--strava-orange);
-}
-
-.bet-wager.won {
-    color: var(--accent-green);
-}
-
-.bet-wager.lost {
-    color: var(--accent-red);
-}
-
-.bet-actions {
-    margin-top: 1rem;
-}
+.bet-deadline { display: flex; flex-direction: column; gap: 0.1rem; }
+.deadline-label { font-size: 0.75rem; color: var(--strava-orange); font-weight: 600; }
+.deadline-value { font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); }
+.bet-wager { font-size: 1.25rem; font-weight: 700; color: var(--strava-orange); }
+.bet-wager.won { color: var(--accent-green); }
+.bet-wager.lost { color: var(--accent-red); }
+.bet-actions { margin-top: 1rem; }
 
 .btn-cancel {
     width: 100%;
@@ -1076,84 +622,112 @@ body {
     font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.2s;
+    font-family: inherit;
 }
+.btn-cancel:hover { background: rgba(255, 68, 68, 0.15); }
 
-.btn-cancel:hover {
-    background: rgba(255, 68, 68, 0.15);
-}
+/* Bet Detail Page */
+.bet-detail-page { max-width: 800px; margin: 0 auto; padding: 2rem; }
 
-/* Dashboard Active Bets */
-.active-bets-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
+.bet-detail-header { margin-top: 0.5rem; }
+.bet-detail-title-row { display: flex; align-items: center; gap: 1.5rem; }
+.bet-detail-title-row h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+.bet-detail-description { color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 2rem; }
 
-.active-bet-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: var(--bg-dark);
-    border-radius: 12px;
-    transition: background 0.2s;
-}
-
-.active-bet-item:hover {
-    background: var(--bg-card-hover);
-}
-
-.active-bet-icon {
-    font-size: 1.5rem;
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Countdown Card */
+.bet-countdown-card {
     background: var(--bg-card);
-    border-radius: 10px;
+    border: 1px solid var(--strava-orange);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
 }
+.countdown-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+.countdown-value {
+    font-size: 3rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 0.5rem;
+}
+.countdown-deadline { color: var(--text-secondary); font-size: 0.9rem; }
 
-.active-bet-info {
-    flex: 1;
+/* Result Cards */
+.bet-result-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
 }
+.bet-result-card.won { background: rgba(0, 212, 106, 0.1); border: 1px solid var(--accent-green); }
+.bet-result-card.lost { background: rgba(255, 68, 68, 0.1); border: 1px solid var(--accent-red); }
+.result-icon { font-size: 3rem; }
+.result-text h3 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+.result-text p { color: var(--text-secondary); }
+.result-meta { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; }
 
-.active-bet-title {
-    font-weight: 600;
-    margin-bottom: 0.25rem;
+/* Detail Grid */
+.bet-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+.detail-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 1.5rem;
 }
+.detail-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+.detail-rows { display: flex; flex-direction: column; }
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+.detail-row:last-child { border-bottom: none; }
+.detail-label { color: var(--text-secondary); font-size: 0.9rem; }
+.detail-value { font-weight: 600; }
+.detail-value.wager { color: var(--strava-orange); font-size: 1.25rem; }
 
-.active-bet-meta {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-}
-
-.active-bet-deadline {
-    text-align: right;
-}
-
-.active-bet-deadline .countdown {
-    font-weight: 600;
-    color: var(--strava-orange);
-}
-
-.active-bet-deadline .date {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-}
+.bet-detail-actions { text-align: center; }
+.bet-detail-actions .btn-cancel { width: auto; padding: 0.75rem 2rem; }
 
 /* Responsive */
-@media (max-width: 768px) {
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-    
-    .page-header-content {
-        flex-direction: column;
-    }
-    
-    .bets-grid {
-        grid-template-columns: 1fr;
-    }
+@media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; text-align: center; gap: 3rem; }
+    .hero-subtitle { margin: 0 auto 2.5rem; }
+    .cta-section { align-items: center; }
+    .steps { grid-template-columns: repeat(2, 1fr); }
+    .bet-cards { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .bet-detail-grid { grid-template-columns: 1fr; }
 }
 
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0; right: 0;
+        background: var(--bg-dark);
+        border-bottom: 1px solid var(--border-color);
+        flex-direction: column;
+        padding: 1rem 2rem;
+        gap: 1rem;
+    }
+    .nav-links.active { display: flex; }
+    .mobile-menu-btn { display: flex; }
+    .form-row { grid-template-columns: 1fr; }
+    .page-header-content { flex-direction: column; }
+    .bets-grid { grid-template-columns: 1fr; }
+    .dashboard-stats-bar { flex-wrap: wrap; justify-content: center; }
+}
+
+@media (max-width: 640px) {
+    .hero-title { font-size: 2.5rem; }
+    .steps { grid-template-columns: 1fr; }
+    .dashboard-header { flex-direction: column; gap: 1.5rem; text-align: center; }
+    .user-welcome { flex-direction: column; }
+    .bet-detail-title-row { flex-direction: column; text-align: center; }
+}

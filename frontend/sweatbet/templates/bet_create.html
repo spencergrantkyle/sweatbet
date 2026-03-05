@@ -5,7 +5,7 @@
 {% block content %}
 <section class="bet-create-page">
     <div class="page-header">
-        <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+        <a href="/dashboard" class="back-link">&larr; Back to Dashboard</a>
         <h1>Create a <span class="highlight">New Bet</span></h1>
         <p class="page-subtitle">Challenge yourself and put some skin in the game</p>
     </div>
@@ -20,14 +20,14 @@
     <form class="bet-form" method="POST" action="/bets/create">
         <div class="form-section">
             <h2>Bet Details</h2>
-            
+
             <div class="form-group">
                 <label for="title">What's your challenge?</label>
-                <input 
-                    type="text" 
-                    id="title" 
-                    name="title" 
-                    placeholder="e.g., Run 50km this week"
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="e.g., Run 5km by Saturday"
                     required
                     maxlength="200"
                     class="form-input"
@@ -36,9 +36,9 @@
 
             <div class="form-group">
                 <label for="description">Description (optional)</label>
-                <textarea 
-                    id="description" 
-                    name="description" 
+                <textarea
+                    id="description"
+                    name="description"
                     placeholder="Any additional details about your challenge..."
                     maxlength="1000"
                     class="form-input form-textarea"
@@ -49,7 +49,7 @@
 
         <div class="form-section">
             <h2>Activity Requirements</h2>
-            
+
             <div class="form-row">
                 <div class="form-group">
                     <label for="activity_type">Activity Type</label>
@@ -65,11 +65,11 @@
 
                 <div class="form-group">
                     <label for="distance_km">Minimum Distance (km)</label>
-                    <input 
-                        type="number" 
-                        id="distance_km" 
-                        name="distance_km" 
-                        placeholder="e.g., 10"
+                    <input
+                        type="number"
+                        id="distance_km"
+                        name="distance_km"
+                        placeholder="e.g., 5"
                         min="0.1"
                         max="1000"
                         step="0.1"
@@ -82,10 +82,10 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="time_minutes">Time Limit (minutes)</label>
-                    <input 
-                        type="number" 
-                        id="time_minutes" 
-                        name="time_minutes" 
+                    <input
+                        type="number"
+                        id="time_minutes"
+                        name="time_minutes"
                         placeholder="e.g., 60"
                         min="1"
                         max="1440"
@@ -96,10 +96,10 @@
 
                 <div class="form-group">
                     <label for="deadline">Deadline</label>
-                    <input 
-                        type="datetime-local" 
-                        id="deadline" 
-                        name="deadline" 
+                    <input
+                        type="datetime-local"
+                        id="deadline"
+                        name="deadline"
                         required
                         min="{{ min_deadline }}"
                         value="{{ default_deadline }}"
@@ -112,23 +112,35 @@
 
         <div class="form-section">
             <h2>Stakes</h2>
-            
-            <div class="form-group">
-                <label for="wager_amount">Wager Amount ($)</label>
-                <div class="input-with-prefix">
-                    <span class="input-prefix">$</span>
-                    <input 
-                        type="number" 
-                        id="wager_amount" 
-                        name="wager_amount" 
-                        value="0"
-                        min="0"
-                        max="10000"
-                        step="1"
-                        class="form-input has-prefix"
-                    >
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="wager_amount">Wager Amount (ZAR)</label>
+                    <div class="input-with-prefix">
+                        <span class="input-prefix">R</span>
+                        <input
+                            type="number"
+                            id="wager_amount"
+                            name="wager_amount"
+                            value="50"
+                            min="0"
+                            max="10000"
+                            step="10"
+                            class="form-input has-prefix"
+                        >
+                    </div>
+                    <span class="form-hint">How much are you willing to put on the line?</span>
                 </div>
-                <span class="form-hint">For self-bets, this is your commitment amount</span>
+
+                <div class="form-group">
+                    <label for="stake_recipient">If You Lose</label>
+                    <select id="stake_recipient" name="stake_recipient" class="form-input form-select">
+                        <option value="sweatbet">SweatBet keeps it</option>
+                        <option value="pbo">Donate to charity</option>
+                        <option value="friend">Pay a friend</option>
+                    </select>
+                    <span class="form-hint">Where does the money go if you fail?</span>
+                </div>
             </div>
         </div>
 
@@ -144,7 +156,6 @@
 
 {% block extra_scripts %}
 <script>
-    // Prevent past dates in deadline picker
     document.getElementById('deadline').addEventListener('input', function(e) {
         const now = new Date();
         const selected = new Date(e.target.value);
@@ -156,4 +167,3 @@
     });
 </script>
 {% endblock %}
-

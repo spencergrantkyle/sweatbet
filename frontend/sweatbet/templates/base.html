@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SweatBet{% endblock %}</title>
+    <meta name="description" content="SweatBet - Put money on your fitness goals. Automatic verification via Strava.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -25,25 +26,39 @@
                 <a href="/auth/logout" class="nav-link">Logout</a>
                 {% endif %}
             </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
-    
+
     <main class="main-content">
         {% block content %}{% endblock %}
     </main>
-    
+
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-links">
                 <a href="/privacy" class="footer-link">Privacy Policy</a>
-                <span class="footer-divider">•</span>
+                <span class="footer-divider">|</span>
                 <a href="/terms" class="footer-link">Terms of Service</a>
             </div>
-            <p>&copy; 2026 SweatBet. Put your money where your miles are.</p>
+            <div class="footer-powered">
+                <span class="powered-text">Powered by</span>
+                <svg class="strava-wordmark" viewBox="0 0 80 16" fill="currentColor" width="60" height="12">
+                    <path d="M15.387 9.944l-2.089-4.116h-3.065L15.387 16l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/>
+                </svg>
+            </div>
+            <p class="footer-copy">&copy; 2026 SweatBet (Pty) Ltd. Put your money where your miles are.</p>
         </div>
     </footer>
-    
+
+    <script>
+    function toggleMobileMenu() {
+        document.querySelector('.nav-links').classList.toggle('active');
+        document.querySelector('.mobile-menu-btn').classList.toggle('active');
+    }
+    </script>
     {% block extra_scripts %}{% endblock %}
 </body>
 </html>
-

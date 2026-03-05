@@ -9,7 +9,6 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class BetStatus(str, Enum):
-    """Status of a bet."""
     PENDING = "pending"
     ACTIVE = "active"
     WON = "won"
@@ -17,8 +16,19 @@ class BetStatus(str, Enum):
     CANCELLED = "cancelled"
 
 
+class BetType(str, Enum):
+    INDIVIDUAL = "individual"
+    CHALLENGE = "challenge"
+    GROUP = "group"
+
+
+class StakeRecipientType(str, Enum):
+    SWEATBET = "sweatbet"
+    FRIEND = "friend"
+    PBO = "pbo"
+
+
 class ActivityType(str, Enum):
-    """Supported Strava activity types for bets."""
     RUN = "Run"
     RIDE = "Ride"
     WALK = "Walk"
@@ -28,19 +38,19 @@ class ActivityType(str, Enum):
 
 
 class BetBase(BaseModel):
-    """Base bet schema."""
     title: str = Field(..., min_length=1, max_length=200)
     description: Optional[str] = Field(None, max_length=1000)
+    bet_type: BetType = BetType.INDIVIDUAL
     wager_amount: float = Field(default=0.0, ge=0)
+    currency: str = Field(default="ZAR", max_length=3)
     activity_type: ActivityType
     distance_km: Optional[float] = Field(None, gt=0)
     time_seconds: Optional[int] = Field(None, gt=0)
     deadline: datetime
+    stake_recipient_type: Optional[StakeRecipientType] = StakeRecipientType.SWEATBET
 
 
 class BetCreate(BetBase):
-    """Schema for creating a new bet."""
-    
     @field_validator('deadline')
     @classmethod
     def deadline_must_be_future(cls, v: datetime) -> datetime:
@@ -57,14 +67,12 @@ class BetCreate(BetBase):
 
 
 class BetUpdate(BaseModel):
-    """Schema for updating a bet."""
     title: Optional[str] = Field(None, min_length=1, max_length=200)
     description: Optional[str] = Field(None, max_length=1000)
     status: Optional[BetStatus] = None
 
 
 class BetRead(BetBase):
-    """Schema for reading bet data."""
     id: UUID
     creator_id: UUID
     status: BetStatus
@@ -78,15 +86,15 @@ class BetRead(BetBase):
 
 
 class BetSummary(BaseModel):
-    """Summary view of a bet for lists."""
     id: UUID
     title: str
+    bet_type: BetType
     activity_type: ActivityType
     distance_km: Optional[float]
     deadline: datetime
     status: BetStatus
     wager_amount: float
+    currency: str = "ZAR"
 
     class Config:
         from_attributes = True
-
