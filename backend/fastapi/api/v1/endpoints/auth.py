@@ -7,11 +7,14 @@ Endpoints:
 - GET /auth/logout - Clear session and logout
 """
 
+import logging
 import secrets
 from fastapi import APIRouter, Request, Depends, HTTPException
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import select
+
+logger = logging.getLogger(__name__)
 
 from backend.fastapi.dependencies.database import get_sync_db
 from backend.fastapi.models.user import User, StravaToken
@@ -140,7 +143,7 @@ async def auth_callback(
         return RedirectResponse(url="/dashboard", status_code=302)
         
     except Exception as e:
-        print(f"OAuth callback error: {e}")
+        logger.error(f"OAuth callback error: {e}")
         return RedirectResponse(url=f"/?error=auth_failed")
 
 

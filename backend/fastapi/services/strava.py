@@ -23,6 +23,8 @@ class StravaClient:
     TOKEN_URL = "https://www.strava.com/api/v3/oauth/token"
     API_BASE = "https://www.strava.com/api/v3"
     
+    REQUEST_TIMEOUT = 15.0  # seconds
+
     def __init__(
         self,
         client_id: str = None,
@@ -72,7 +74,7 @@ class StravaClient:
             - access_token: Token for API calls
             - athlete: Summary of athlete information
         """
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=self.REQUEST_TIMEOUT) as client:
             response = await client.post(
                 self.TOKEN_URL,
                 data={
@@ -95,7 +97,7 @@ class StravaClient:
         Returns:
             Dict containing new access_token, refresh_token, and expires_at
         """
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=self.REQUEST_TIMEOUT) as client:
             response = await client.post(
                 self.TOKEN_URL,
                 data={
@@ -118,7 +120,7 @@ class StravaClient:
         Returns:
             Athlete profile data
         """
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=self.REQUEST_TIMEOUT) as client:
             response = await client.get(
                 f"{self.API_BASE}/athlete",
                 headers={"Authorization": f"Bearer {access_token}"}
@@ -157,7 +159,7 @@ class StravaClient:
         if after:
             params["after"] = after
             
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=self.REQUEST_TIMEOUT) as client:
             response = await client.get(
                 f"{self.API_BASE}/athlete/activities",
                 headers={"Authorization": f"Bearer {access_token}"},
@@ -177,7 +179,7 @@ class StravaClient:
         Returns:
             Detailed activity data
         """
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=self.REQUEST_TIMEOUT) as client:
             response = await client.get(
                 f"{self.API_BASE}/activities/{activity_id}",
                 headers={"Authorization": f"Bearer {access_token}"}

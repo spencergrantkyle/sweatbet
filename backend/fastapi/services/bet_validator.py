@@ -229,6 +229,9 @@ async def process_new_activity(
                 distance_km=activity.get("distance", 0) / 1000,
                 user_name=user.full_name
             )
+
+            # Only one bet should be won per activity
+            break
         else:
             # Bet requirements not met - send notification but don't change status
             logger.info(f"Bet '{bet.title}' not satisfied: {result.reason}")
