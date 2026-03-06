@@ -263,7 +263,7 @@
         fetch('/bet/{{ bet.id }}/confirm', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ participant_id: 'warren-1', action: 'confirm' })
+            body: JSON.stringify({ action: 'confirm' })
         });
 
         // Confetti burst
@@ -344,7 +344,7 @@
         fetch('/bet/{{ bet.id }}/confirm', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ participant_id: 'warren-1', action: 'decline' })
+            body: JSON.stringify({ action: 'decline' })
         });
 
         btnConfirm.textContent = 'DECLINED';
@@ -363,7 +363,7 @@
     const copiedToast = document.getElementById('bc-copied-toast');
 
     const shareUrl = window.location.href;
-    const shareText = '\uD83D\uDCAA SweatBet: {{ bet.participants[0].name }} vs {{ bet.participants[1].name }} \u2014 {{ bet.currencySymbol }}{{ "{:,.0f}".format(bet.stakeAmount) }} on the line! {{ bet.betName }}. Are you in?';
+    const shareText = '\uD83D\uDCAA SweatBet: {{ bet.participants[0].name }}{% if bet.participants|length > 1 %} vs {{ bet.participants[1].name }}{% endif %} \u2014 {{ bet.currencySymbol }}{{ "{:,.0f}".format(bet.stakeAmount) }} on the line! {{ bet.betName }}. Are you in?';
 
     shareWhatsapp.addEventListener('click', function () {
         window.open('https://wa.me/?text=' + encodeURIComponent(shareText + ' ' + shareUrl), '_blank');

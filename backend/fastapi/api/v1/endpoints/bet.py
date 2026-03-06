@@ -146,10 +146,6 @@ async def create_bet(
     db.commit()
     db.refresh(bet)
 
-    # If there's a wager, redirect to payment checkout; otherwise activate immediately
-    if bet.wager_amount > 0:
-        return RedirectResponse(url=f"/payments/checkout/{bet.id}", status_code=status.HTTP_302_FOUND)
-
     return RedirectResponse(url=f"/bet/{bet.id}/confirm", status_code=status.HTTP_302_FOUND)
 
 
