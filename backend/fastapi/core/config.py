@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import model_validator
 
 # Config loaded from .env file
 
@@ -103,6 +104,24 @@ class ProdSettings(Settings):
 
     # Database settings for production
     model_config = SettingsConfigDict(env_file=".env", extra='allow')
+
+    @model_validator(mode='after')
+    def validate_prod_settings(self):
+        """Ensure critical settings are configured in production."""
+        missing = []
+        if not self.SECRET_KEY or self.SECRET_KEY == 'dev-secret-key-change-in-production':
+            missing.append('SECRET_KEY')
+        if not self.DATABASE_URL and not (self.DB_ENGINE and self.DB_HOST):
+            missing.append('DATABASE_URL')
+        if not self.HOST_URL:
+            missing.append('HOST_URL')
+        if not self.STRAVA_CLIENT_ID:
+            missing.append('STRAVA_CLIENT_ID')
+        if not self.STRAVA_CLIENT_SECRET:
+            missing.append('STRAVA_CLIENT_SECRET')
+        if missing:
+            raise ValueError(f"Missing required production settings: {', '.join(missing)}")
+        return self
 
 def get_settings(env_mode: str = "dev"):
     if env_mode == "dev":

@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}Pay - SweatBet{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/sweatbet/static/payment.css">
+{% endblock %}
+
+{% block content %}
+<div class="payment-page">
+
+    <div class="payment-header">
+        <a href="/bets" class="back-link">← Back to Bets</a>
+        <h1>Checkout</h1>
+        <p class="payment-subtitle">Secure your wager to activate this bet</p>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary">
+        <div class="order-summary-title">Bet Summary</div>
+        <div class="order-row">
+            <span class="order-label">{{ bet.title }}</span>
+            <span class="order-value">{{ bet.activity_type.value }}</span>
+        </div>
+        {% if bet.distance_km %}
+        <div class="order-row">
+            <span class="order-label">Target Distance</span>
+            <span class="order-value">{{ "%.1f"|format(bet.distance_km) }} km</span>
+        </div>
+        {% endif %}
+        <div class="order-row">
+            <span class="order-label">Deadline</span>
+            <span class="order-value">{{ bet.deadline.strftime('%d %b %Y, %H:%M') }}</span>
+        </div>
+        <div class="order-row total">
+            <span class="order-label">Wager Amount</span>
+            <span class="order-value">R{{ "%.0f"|format(bet.wager_amount) }}</span>
+        </div>
+    </div>
+
+    {% if bet.wager_amount > 0 %}
+    <!-- Payment Method Selection -->
+    <div class="payment-methods">
+        <div class="payment-methods-title">Payment Method</div>
+
+        <label class="payment-method-option selected" data-method="card" onclick="selectMethod(this)">
+            <input type="radio" name="payment_method" value="card" checked>
+            <div class="payment-method-radio"></div>
+            <div class="payment-method-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
+            <div class="payment-method-info">
+                <div class="payment-method-name">Card Payment</div>
+                <div class="payment-method-desc">Visa, Mastercard, Amex</div>
+                <div class="card-brands">
+                    <span class="card-brand">VISA</span>
+                    <span class="card-brand">MC</span>
+                    <span class="card-brand">AMEX</span>
+                </div>
+            </div>
+        </label>
+
+        <label class="payment-method-option" data-method="pay_by_bank" onclick="selectMethod(this)">
+            <input type="radio" name="payment_method" value="pay_by_bank">
+            <div class="payment-method-radio"></div>
+            <div class="payment-method-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M3 10h18"/><path d="M5 6l7-3 7 3"/><path d="M4 10v11"/><path d="M20 10v11"/><path d="M8 14v3"/><path d="M12 14v3"/><path d="M16 14v3"/></svg>
+            </div>
+            <div class="payment-method-info">
+                <div class="payment-method-name">Pay by Bank</div>
+                <div class="payment-method-desc">Direct bank transfer via EFT</div>
+            </div>
+            <span class="payment-method-badge">Lower fees</span>
+        </label>
+
+        <label class="payment-method-option" data-method="wallet" onclick="selectMethod(this)">
+            <input type="radio" name="payment_method" value="wallet">
+            <div class="payment-method-radio"></div>
+            <div class="payment-method-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4h-4z"/></svg>
+            </div>
+            <div class="payment-method-info">
+                <div class="payment-method-name">Digital Wallet</div>
+                <div class="payment-method-desc">Apple Pay, Google Pay, Samsung Pay</div>
+            </div>
+        </label>
+    </div>
+
+    <!-- Pay Button -->
+    <div class="pay-button-section">
+        <button class="btn-pay" id="btn-pay" onclick="initiatePayment()">
+            Pay R{{ "%.0f"|format(bet.wager_amount) }}
+        </button>
+        <div class="pay-secure-note">
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+            Secured by Stitch. PCI DSS Level 1 certified.
+        </div>
+    </div>
+
+    <div class="powered-by">
+        Payments powered by <span>Stitch</span>
+    </div>
+
+    {% else %}
+    <!-- Free Bet (R0 wager) -->
+    <div class="free-bet-notice">
+        <div class="notice-icon">&#127942;</div>
+        <h2>No Payment Required</h2>
+        <p>This is a pride-only bet. No money on the line — just bragging rights.</p>
+    </div>
+
+    <button class="btn-activate" onclick="activateFreeBet()">
+        Activate Bet
+    </button>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+    let selectedMethod = 'card';
+
+    window.selectMethod = function (el) {
+        document.querySelectorAll('.payment-method-option').forEach(function (opt) {
+            opt.classList.remove('selected');
+        });
+        el.classList.add('selected');
+        el.querySelector('input[type="radio"]').checked = true;
+        selectedMethod = el.dataset.method;
+    };
+
+    window.initiatePayment = function () {
+        const btn = document.getElementById('btn-pay');
+        btn.classList.add('processing');
+        btn.textContent = 'Processing...';
+        btn.disabled = true;
+
+        fetch('/payments/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                bet_id: '{{ bet.id }}',
+                payment_method: selectedMethod
+            })
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            if (data.redirect_url) {
+                // In production: redirect to Stitch hosted payment page
+                // In dev/mock: redirect to our simulated return page
+                window.location.href = data.redirect_url;
+            } else if (data.error) {
+                btn.classList.remove('processing');
+                btn.textContent = 'Pay R{{ "%.0f"|format(bet.wager_amount) }}';
+                btn.disabled = false;
+                alert('Payment error: ' + data.error);
+            }
+        })
+        .catch(function (err) {
+            btn.classList.remove('processing');
+            btn.textContent = 'Pay R{{ "%.0f"|format(bet.wager_amount) }}';
+            btn.disabled = false;
+            alert('Something went wrong. Please try again.');
+        });
+    };
+
+    window.activateFreeBet = function () {
+        fetch('/payments/activate-free', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ bet_id: '{{ bet.id }}' })
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            if (data.redirect_url) {
+                window.location.href = data.redirect_url;
+            }
+        });
+    };
+})();
+</script>
+{% endblock %}

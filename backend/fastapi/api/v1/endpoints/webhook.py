@@ -11,6 +11,7 @@ Sends Telegram notifications for all events.
 
 import hmac
 import hashlib
+from datetime import datetime
 from fastapi import APIRouter, Request, Depends, HTTPException, Query, BackgroundTasks
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -147,31 +148,37 @@ async def handle_webhook(
 
 
 async def handle_deauthorization(strava_athlete_id: int, db: Session):
-    """
-    Handle deauthorization event - clean up user data.
-    
-    When a user revokes access in Strava's settings, we should:
-    1. Delete their OAuth tokens
-    2. Optionally delete their account (configurable)
-    
-    For SweatBet, we delete all user data to comply with Strava requirements.
-    """
+    """Handle deauthorization event - clean up all user data for Strava compliance."""
+    import logging
+    logger = logging.getLogger(__name__)
+
     if not strava_athlete_id:
-        print("Deauthorization event received without athlete ID")
+        logger.warning("Deauthorization event received without athlete ID")
         return
-    
-    # Find the user by Strava athlete ID
+
     user = db.query(User).filter(User.strava_athlete_id == strava_athlete_id).first()
-    
+
     if not user:
-        print(f"No user found for Strava athlete ID: {strava_athlete_id}")
+        logger.warning(f"No user found for Strava athlete ID: {strava_athlete_id}")
         return
-    
-    print(f"Processing deauthorization for user {user.id} (Strava athlete {strava_athlete_id})")
-    
-    # Delete the user and all associated data (cascades to tokens)
+
+    # Count records for audit log before deletion
+    from backend.fastapi.models.bet import Bet
+    from backend.fastapi.models.processed_activity import ProcessedActivity
+
+    bet_count = db.query(Bet).filter(Bet.creator_id == user.id).count()
+    activity_count = db.query(ProcessedActivity).filter(ProcessedActivity.user_id == user.id).count()
+    token_count = db.query(StravaToken).filter(StravaToken.user_id == user.id).count()
+
+    logger.info(
+        f"Deauthorization audit: user={user.id}, athlete={strava_athlete_id}, "
+        f"bets={bet_count}, activities={activity_count}, tokens={token_count}, "
+        f"timestamp={datetime.utcnow().isoformat()}"
+    )
+
+    # Delete the user - cascades to all related data
     db.delete(user)
     db.commit()
-    
-    print(f"Successfully deleted user {user.id} due to Strava deauthorization")
+
+    logger.info(f"Deauthorization complete: all data deleted for user {user.id}")
 

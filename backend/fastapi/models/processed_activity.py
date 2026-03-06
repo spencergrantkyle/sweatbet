@@ -49,8 +49,12 @@ class ProcessedActivity(Base):
     # Optional details about the validation
     validation_details = Column(String(500), nullable=True)
 
+    # Strava API compliance: 7-day cache policy
+    cached_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    cache_expires_at = Column(DateTime, nullable=True)
+
     # Relationships
-    user = relationship("User", backref="processed_activities")
+    user = relationship("User", back_populates="processed_activities")
     bet = relationship("Bet", backref="processed_activities")
 
     def __repr__(self):

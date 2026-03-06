@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Payment {{ status | capitalize }} - SweatBet{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/sweatbet/static/payment.css">
+{% endblock %}
+
+{% block content %}
+<div class="payment-page">
+    <div class="payment-result">
+
+        {% if status == "complete" %}
+        <div class="result-icon success">&#9989;</div>
+        <h1 class="result-title success">Payment Successful</h1>
+        <p class="result-message">
+            Your wager has been secured and your bet is now active. Time to get moving!
+        </p>
+        {% elif status == "pending" %}
+        <div class="result-icon">&#9203;</div>
+        <h1 class="result-title pending">Payment Pending</h1>
+        <p class="result-message">
+            Your bank transfer is being processed. We'll activate your bet once the funds arrive (usually within minutes).
+        </p>
+        {% elif status == "failed" %}
+        <div class="result-icon">&#10060;</div>
+        <h1 class="result-title failed">Payment Failed</h1>
+        <p class="result-message">
+            Something went wrong with your payment. No money has been charged. Please try again.
+        </p>
+        {% else %}
+        <div class="result-icon">&#10060;</div>
+        <h1 class="result-title failed">Payment Cancelled</h1>
+        <p class="result-message">
+            You cancelled the payment. Your bet is still saved — you can pay anytime to activate it.
+        </p>
+        {% endif %}
+
+        {% if bet %}
+        <div class="result-details">
+            <div class="result-detail-row">
+                <span class="result-detail-label">Bet</span>
+                <span class="result-detail-value">{{ bet.title }}</span>
+            </div>
+            <div class="result-detail-row">
+                <span class="result-detail-label">Amount</span>
+                <span class="result-detail-value">R{{ "%.0f"|format(bet.wager_amount) }}</span>
+            </div>
+            {% if payment_method %}
+            <div class="result-detail-row">
+                <span class="result-detail-label">Method</span>
+                <span class="result-detail-value">{{ payment_method }}</span>
+            </div>
+            {% endif %}
+            {% if payment_ref %}
+            <div class="result-detail-row">
+                <span class="result-detail-label">Reference</span>
+                <span class="result-detail-value" style="font-family: monospace; font-size: 0.8rem;">{{ payment_ref }}</span>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="result-actions">
+            {% if status == "complete" or status == "pending" %}
+            <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+            <a href="/bets" class="btn btn-secondary">View My Bets</a>
+            {% elif status == "failed" %}
+            {% if bet %}
+            <a href="/payments/checkout/{{ bet.id }}" class="btn btn-primary">Try Again</a>
+            {% endif %}
+            <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+            {% else %}
+            {% if bet %}
+            <a href="/payments/checkout/{{ bet.id }}" class="btn btn-primary">Complete Payment</a>
+            {% endif %}
+            <a href="/bets" class="btn btn-secondary">View My Bets</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -71,15 +71,20 @@
                         </div>
                         
                         {% if bet.wager_amount > 0 %}
-                        <div class="bet-wager">${{ "%.0f"|format(bet.wager_amount) }}</div>
+                        <div class="bet-wager">R{{ "%.0f"|format(bet.wager_amount) }}</div>
                         {% endif %}
                     </div>
                     
-                    <form action="/bets/{{ bet.id }}/cancel" method="POST" class="bet-actions">
-                        <button type="submit" class="btn btn-cancel" onclick="return confirm('Are you sure you want to cancel this bet?')">
-                            Cancel Bet
-                        </button>
-                    </form>
+                    <div class="bet-actions" style="display: flex; gap: 0.5rem;">
+                        {% if bet.status.value == 'pending' and bet.wager_amount > 0 %}
+                        <a href="/payments/checkout/{{ bet.id }}" class="btn btn-primary" style="flex: 1; text-align: center; padding: 0.6rem 1rem; font-size: 0.85rem;">Pay Now</a>
+                        {% endif %}
+                        <form action="/bets/{{ bet.id }}/cancel" method="POST" style="flex: 1;">
+                            <button type="submit" class="btn btn-cancel" onclick="return confirm('Are you sure you want to cancel this bet?')">
+                                Cancel Bet
+                            </button>
+                        </form>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
@@ -132,7 +137,7 @@
                     
                     <div class="bet-footer">
                         {% if bet.wager_amount > 0 %}
-                        <div class="bet-wager {{ bet.status.value }}">${{ "%.0f"|format(bet.wager_amount) }}</div>
+                        <div class="bet-wager {{ bet.status.value }}">R{{ "%.0f"|format(bet.wager_amount) }}</div>
                         {% endif %}
                     </div>
                 </div>

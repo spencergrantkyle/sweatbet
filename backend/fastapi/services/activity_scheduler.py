@@ -218,7 +218,9 @@ async def process_user_activities(
                     user_id=user_id,
                     bet_id=bet.id,
                     validation_result="won",
-                    validation_details=validation.reason
+                    validation_details=validation.reason,
+                    cached_at=datetime.utcnow(),
+                    cache_expires_at=datetime.utcnow() + timedelta(days=7),
                 )
                 db.add(processed)
                 db.commit()
@@ -240,7 +242,9 @@ async def process_user_activities(
                 user_id=user_id,
                 bet_id=None,
                 validation_result="not_met",
-                validation_details="No matching bet requirements"
+                validation_details="No matching bet requirements",
+                cached_at=datetime.utcnow(),
+                cache_expires_at=datetime.utcnow() + timedelta(days=7),
             )
             db.add(processed)
             db.commit()
@@ -408,6 +412,31 @@ async def send_outstanding_bet_reminders():
         db.close()
 
 
+async def purge_expired_cache():
+    """Purge ProcessedActivity records older than their cache expiry (Strava API compliance)."""
+    logger.info("Starting cache purge job...")
+    db = get_db_session()
+    try:
+        expired = db.query(ProcessedActivity).filter(
+            ProcessedActivity.cache_expires_at <= datetime.utcnow(),
+            ProcessedActivity.cache_expires_at.isnot(None)
+        ).all()
+
+        if not expired:
+            logger.info("No expired cache entries found")
+            return
+
+        count = len(expired)
+        for record in expired:
+            db.delete(record)
+        db.commit()
+        logger.info(f"Purged {count} expired cache entries")
+    except Exception as e:
+        logger.error(f"Error in cache purge job: {e}")
+    finally:
+        db.close()
+
+
 def start_scheduler():
     """
     Initialize and start the APScheduler.
@@ -455,6 +484,16 @@ def start_scheduler():
         max_instances=1
     )
     
+    # Job 4: Purge expired Strava data cache (API compliance)
+    scheduler.add_job(
+        purge_expired_cache,
+        trigger=IntervalTrigger(hours=24),
+        id="cache_purge",
+        name="Purge Expired Cache",
+        replace_existing=True,
+        max_instances=1
+    )
+
     scheduler.start()
     logger.info(
         f"Activity scheduler started: "

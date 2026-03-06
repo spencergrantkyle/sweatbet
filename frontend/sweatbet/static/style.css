@@ -650,6 +650,45 @@ body {
     border-top: 1px solid var(--border-color);
 }
 
+/* Strava Branding */
+.powered-by-strava {
+    display: inline-block;
+    transition: opacity 0.2s;
+}
+
+.powered-by-strava:hover {
+    opacity: 0.8;
+}
+
+.strava-attribution {
+    margin-top: 0.75rem;
+}
+
+.strava-attribution img {
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.strava-attribution img:hover {
+    opacity: 1;
+}
+
+.strava-view-link {
+    color: #FC4C02;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.strava-view-link:hover {
+    background: rgba(252, 76, 2, 0.15);
+    color: #FF6B35;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     .hero {
@@ -1142,16 +1181,38 @@ body {
     color: var(--text-muted);
 }
 
+/* Loading state for buttons */
+.btn.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.btn.loading::after {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-left: 0.5rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .form-row {
         grid-template-columns: 1fr;
     }
-    
+
     .page-header-content {
         flex-direction: column;
     }
-    
+
     .bets-grid {
         grid-template-columns: 1fr;
     }

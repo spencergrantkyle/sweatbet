@@ -15,4 +15,5 @@ pydantic-settings
 httpx
 jinja2
 apscheduler>=3.10.0
+alembic
 

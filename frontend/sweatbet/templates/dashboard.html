@@ -25,7 +25,9 @@
         <div class="dashboard-section activities-section">
             <div class="section-header">
                 <h2>Recent Activities</h2>
-                <span class="badge">From Strava</span>
+                <a href="https://www.strava.com" target="_blank" rel="noopener" class="powered-by-strava">
+                    <img src="/sweatbet/static/powered-by-strava.svg" alt="Powered by Strava" height="28">
+                </a>
             </div>
             
             {% if activities %}
@@ -58,6 +60,9 @@
                             <span class="stat-unit">min</span>
                         </div>
                     </div>
+                    {% if activity.id %}
+                    <a href="https://www.strava.com/activities/{{ activity.id }}" target="_blank" rel="noopener" class="strava-view-link" title="View on Strava">↗</a>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
@@ -93,11 +98,15 @@
                         <div class="active-bet-meta">
                             {{ bet.activity_type.value }}
                             {% if bet.distance_km %} • {{ "%.1f"|format(bet.distance_km) }} km{% endif %}
-                            {% if bet.wager_amount > 0 %} • ${{ "%.0f"|format(bet.wager_amount) }}{% endif %}
+                            {% if bet.wager_amount > 0 %} • R{{ "%.0f"|format(bet.wager_amount) }}{% endif %}
                         </div>
                     </div>
                     <div class="active-bet-deadline">
+                        {% if bet.status.value == 'pending' and bet.wager_amount > 0 %}
+                        <a href="/payments/checkout/{{ bet.id }}" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Pay Now</a>
+                        {% else %}
                         <div class="date">{{ bet.deadline.strftime('%b %d') }}</div>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}

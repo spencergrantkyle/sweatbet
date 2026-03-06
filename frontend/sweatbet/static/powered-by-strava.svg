@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40" fill="none">
+  <rect width="200" height="40" rx="6" fill="#FC4C02"/>
+  <text x="12" y="26" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="white">POWERED BY</text>
+  <path d="M124 12l-6 12h4.2l1.8-3.6 1.8 3.6h4.2l-6-12z M130 24l2.4-4.8 2.4 4.8h4.2l-6.6-13.2-6.6 13.2h4.2z" fill="white" transform="translate(0,2)"/>
+  <text x="140" y="26" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="white">STRAVA</text>
+</svg>

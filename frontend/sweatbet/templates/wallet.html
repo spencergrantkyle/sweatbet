@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Wallet - SweatBet{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/sweatbet/static/payment.css">
+{% endblock %}
+
+{% block content %}
+<div class="wallet-page">
+
+    <div class="page-header">
+        <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+        <h1>My <span class="highlight">Wallet</span></h1>
+        <p class="page-subtitle">Manage your balance and payouts</p>
+    </div>
+
+    <!-- Balance Card -->
+    <div class="wallet-balance-card">
+        <div class="wallet-balance-label">Available Balance</div>
+        <div class="wallet-balance-amount">
+            <span class="currency">R</span>{{ "%.0f"|format(balance) }}
+        </div>
+        <div class="wallet-balance-sub">
+            {% if pending_amount > 0 %}
+            R{{ "%.0f"|format(pending_amount) }} pending
+            {% else %}
+            No pending transactions
+            {% endif %}
+        </div>
+        <div class="wallet-actions">
+            <a href="/bets/create" class="btn btn-primary">Place a Bet</a>
+            <button class="btn btn-secondary" id="btn-withdraw" {% if balance <= 0 %}disabled{% endif %}
+                onclick="requestWithdrawal()">
+                Withdraw
+            </button>
+        </div>
+    </div>
+
+    <!-- Bank Account for Payouts -->
+    <div class="wallet-section">
+        <div class="wallet-section-header">
+            <div class="wallet-section-title">Payout Bank Account</div>
+            {% if bank_account %}
+            <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;"
+                onclick="toggleBankForm()">Edit</button>
+            {% endif %}
+        </div>
+
+        {% if bank_account %}
+        <div class="bank-account-card" id="bank-display">
+            <div class="bank-icon">&#127974;</div>
+            <div class="bank-details">
+                <div class="bank-name">{{ bank_account.bank_name }}</div>
+                <div class="bank-account-number">**** **** {{ bank_account.account_number[-4:] }}</div>
+            </div>
+            <span class="bank-status {{ 'verified' if bank_account.verified else 'unverified' }}">
+                {{ 'Verified' if bank_account.verified else 'Pending' }}
+            </span>
+        </div>
+        {% endif %}
+
+        <form class="bank-form" id="bank-form" method="POST" action="/wallet/bank-account"
+            style="{% if bank_account %}display: none;{% endif %}">
+            <div class="form-group">
+                <label for="bank_name">Bank</label>
+                <select id="bank_name" name="bank_name" required class="form-input form-select">
+                    <option value="">Select your bank</option>
+                    <option value="absa" {% if bank_account and bank_account.bank_id == 'absa' %}selected{% endif %}>Absa</option>
+                    <option value="capitec" {% if bank_account and bank_account.bank_id == 'capitec' %}selected{% endif %}>Capitec Bank</option>
+                    <option value="fnb" {% if bank_account and bank_account.bank_id == 'fnb' %}selected{% endif %}>FNB (First National Bank)</option>
+                    <option value="nedbank" {% if bank_account and bank_account.bank_id == 'nedbank' %}selected{% endif %}>Nedbank</option>
+                    <option value="standard_bank" {% if bank_account and bank_account.bank_id == 'standard_bank' %}selected{% endif %}>Standard Bank</option>
+                    <option value="tymebank" {% if bank_account and bank_account.bank_id == 'tymebank' %}selected{% endif %}>TymeBank</option>
+                    <option value="discovery" {% if bank_account and bank_account.bank_id == 'discovery' %}selected{% endif %}>Discovery Bank</option>
+                    <option value="african_bank" {% if bank_account and bank_account.bank_id == 'african_bank' %}selected{% endif %}>African Bank</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="account_number">Account Number</label>
+                    <input type="text" id="account_number" name="account_number" required
+                        class="form-input" placeholder="e.g., 1234567890"
+                        pattern="[0-9]{6,16}" inputmode="numeric"
+                        value="{{ bank_account.account_number if bank_account else '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="account_type">Account Type</label>
+                    <select id="account_type" name="account_type" required class="form-input form-select">
+                        <option value="cheque" {% if bank_account and bank_account.account_type == 'cheque' %}selected{% endif %}>Cheque / Current</option>
+                        <option value="savings" {% if bank_account and bank_account.account_type == 'savings' %}selected{% endif %}>Savings</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="account_holder">Account Holder Name</label>
+                <input type="text" id="account_holder" name="account_holder" required
+                    class="form-input" placeholder="As it appears on your bank account"
+                    value="{{ bank_account.account_holder if bank_account else user.full_name }}">
+                <span class="form-hint">Must match the name on your bank account for verification</span>
+            </div>
+
+            <div class="form-actions">
+                {% if bank_account %}
+                <button type="button" class="btn btn-secondary" onclick="toggleBankForm()">Cancel</button>
+                {% endif %}
+                <button type="submit" class="btn btn-primary">Save Bank Account</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Transaction History -->
+    <div class="wallet-section">
+        <div class="wallet-section-header">
+            <div class="wallet-section-title">Transaction History</div>
+        </div>
+
+        {% if transactions %}
+        <div class="transaction-list">
+            {% for tx in transactions %}
+            <div class="transaction-item">
+                <div class="transaction-icon {{ tx.type }}">
+                    {% if tx.type == 'deposit' %}&#8600;{% else %}&#8599;{% endif %}
+                </div>
+                <div class="transaction-info">
+                    <div class="transaction-title">{{ tx.description }}</div>
+                    <div class="transaction-date">{{ tx.date }}</div>
+                </div>
+                <div>
+                    <span class="transaction-amount {{ 'positive' if tx.type == 'deposit' else 'negative' }}">
+                        {{ '+' if tx.type == 'deposit' else '-' }}R{{ "%.0f"|format(tx.amount) }}
+                    </span>
+                    <span class="transaction-status {{ tx.status }}">{{ tx.status | capitalize }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-transactions">
+            No transactions yet. Place a bet to get started!
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function toggleBankForm() {
+    var form = document.getElementById('bank-form');
+    var display = document.getElementById('bank-display');
+    if (form.style.display === 'none') {
+        form.style.display = 'flex';
+        if (display) display.style.display = 'none';
+    } else {
+        form.style.display = 'none';
+        if (display) display.style.display = 'flex';
+    }
+}
+
+function requestWithdrawal() {
+    if (!confirm('Withdraw your full balance to your linked bank account?')) return;
+
+    fetch('/wallet/withdraw', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+        if (data.success) {
+            window.location.reload();
+        } else {
+            alert(data.error || 'Withdrawal failed. Please try again.');
+        }
+    });
+}
+</script>
+{% endblock %}

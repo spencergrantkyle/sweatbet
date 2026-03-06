@@ -1,7 +1,7 @@
 import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from backend.fastapi.dependencies.database import init_db, AsyncSessionLocal
+from backend.fastapi.dependencies.database import init_db, AsyncSessionLocal, close_engines
 from backend.fastapi.crud.message import create_message_dict_async
 from backend.data.init_data import models_data
 from backend.fastapi.services.activity_scheduler import start_scheduler, stop_scheduler
@@ -27,6 +27,9 @@ async def lifespan(app: FastAPI):
     start_scheduler()
 
     yield
+
+    # Shutdown: Dispose database connections
+    await close_engines()
 
     # Shutdown: Stop the scheduler gracefully
     logger.info("Stopping activity scheduler...")

@@ -44,6 +44,8 @@ WORKDIR /app
 # Copy the application code
 COPY backend/ /app/backend/
 COPY frontend/ /app/frontend/
+COPY alembic.ini /app/alembic.ini
+COPY alembic/ /app/alembic/
 
 # Command to run the uvicorn server
 CMD ["python", "-m", "backend.fastapi.main", "--mode", "prod", "--host", "0.0.0.0"]

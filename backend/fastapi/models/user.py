@@ -20,6 +20,10 @@ class User(Base):
 
     # Relationship to tokens
     tokens = relationship("StravaToken", back_populates="user", cascade="all, delete-orphan")
+    # Cascade delete bets when user is deleted
+    bets = relationship("Bet", backref=None, cascade="all, delete-orphan", passive_deletes=True)
+    # Cascade delete processed activities when user is deleted
+    processed_activities = relationship("ProcessedActivity", backref=None, cascade="all, delete-orphan", passive_deletes=True)
 
     def __repr__(self):
         return f"<User(id={self.id}, strava_athlete_id={self.strava_athlete_id}, name={self.firstname} {self.lastname})>"

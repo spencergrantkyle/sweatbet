@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+
+{% block title %}{{ bet.challengeName }} — Bet Confirmation | SweatBet{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/sweatbet/static/bet_confirm.css">
+{% endblock %}
+
+{% block content %}
+<div class="bc-page">
+
+    <!-- ===== HERO ===== -->
+    <section class="bc-hero bc-anim-1">
+        <div class="bc-challenge-badge">{{ bet.betType }} &middot; {{ bet.challengeName }}</div>
+        <div class="bc-activity-icon">{{ bet.activityIcon }}</div>
+        <h1 class="bc-hero-title">{{ bet.betName }}</h1>
+        <div class="bc-countdown" id="bc-countdown">
+            <span>Starts in</span>
+            <span class="bc-countdown-value" id="bc-countdown-value">--d --h --m</span>
+        </div>
+    </section>
+
+    <!-- ===== BET DETAILS ===== -->
+    <section class="bc-details bc-anim-2">
+        <div class="bc-details-title">Bet Details</div>
+
+        <div class="bc-detail-row">
+            <span class="bc-detail-label"><span class="bc-detail-label-icon">{{ bet.activityIcon }}</span> Activity</span>
+            <span class="bc-detail-value">{{ bet.activityType }}</span>
+        </div>
+        <div class="bc-detail-row">
+            <span class="bc-detail-label"><span class="bc-detail-label-icon">&#x1F3AF;</span> Target</span>
+            <span class="bc-detail-value">{{ bet.weeklyTarget }} {{ bet.metricUnit }}/week ({{ bet.metricTarget }} {{ bet.metricUnit }} total)</span>
+        </div>
+        <div class="bc-detail-row">
+            <span class="bc-detail-label"><span class="bc-detail-label-icon">&#x1F4C5;</span> Duration</span>
+            <span class="bc-detail-value">{{ bet.durationWeeks }} weeks</span>
+        </div>
+        <div class="bc-detail-row">
+            <span class="bc-detail-label"><span class="bc-detail-label-icon">&#x1F4C6;</span> Dates</span>
+            <span class="bc-detail-value" id="bc-dates">{{ bet.startDate }} &rarr; {{ bet.endDate }}</span>
+        </div>
+        <div class="bc-detail-row">
+            <span class="bc-detail-label"><span class="bc-detail-label-icon">&#x1F30D;</span> Timezone</span>
+            <span class="bc-detail-value">{{ bet.timezone }}</span>
+        </div>
+        <div class="bc-detail-row">
+            <span class="bc-detail-label"><span class="bc-detail-label-icon">&#x1F4B0;</span> Stake</span>
+            <span class="bc-detail-value bc-stake-value" id="bc-stake">{{ bet.currencySymbol }}{{ "{:,.0f}".format(bet.stakeAmount) }} {{ bet.currency }}</span>
+        </div>
+        <div class="bc-detail-row">
+            <span class="bc-detail-label"><span class="bc-detail-label-icon">&#x1F91D;</span> If you lose</span>
+            <span class="bc-detail-value">Paid to {{ bet.recipientIfFail }}</span>
+        </div>
+    </section>
+
+    <!-- ===== VERSUS ===== -->
+    <section class="bc-versus bc-anim-3">
+        <div class="bc-versus-header">Participants</div>
+        <div class="bc-versus-layout">
+            {% for p in bet.participants %}
+            {% if not loop.first %}
+            <span class="bc-vs-divider">VS</span>
+            {% endif %}
+            <div class="bc-participant {{ 'confirmed' if p.confirmed else '' }}" data-id="{{ p.id }}">
+                <div class="bc-avatar">{{ p.initials }}</div>
+                <div class="bc-participant-name">{{ p.name }}</div>
+                <div class="bc-participant-role">{{ p.role }}</div>
+                {% if p.confirmed %}
+                <span class="bc-status bc-status-confirmed">Confirmed &#x2705;</span>
+                {% else %}
+                <span class="bc-status bc-status-pending">Pending</span>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ===== TERMS ===== -->
+    <section class="bc-terms bc-anim-4">
+        <button class="bc-terms-toggle" id="bc-terms-toggle" aria-expanded="false">
+            <span class="bc-terms-toggle-title">Terms &amp; Conditions</span>
+            <span class="bc-terms-chevron" id="bc-terms-chevron">&#x25BC;</span>
+        </button>
+        <div class="bc-terms-body" id="bc-terms-body">
+            <div class="bc-terms-text">{{ bet.termsAndConditions }}</div>
+            <div class="bc-checkbox-group">
+                <label class="bc-checkbox-label">
+                    <input type="checkbox" id="bc-check-rules">
+                    <span>I have read and accept the bet terms above</span>
+                </label>
+                <label class="bc-checkbox-label">
+                    <input type="checkbox" id="bc-check-safety">
+                    <span>I confirm I am physically able to complete this challenge</span>
+                </label>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="bc-cta bc-anim-5">
+        <button class="bc-btn-confirm" id="bc-btn-confirm" disabled>I'M IN &#x1F525;</button>
+        <button class="bc-decline-link" id="bc-decline-trigger">Decline this bet</button>
+    </section>
+
+    <!-- ===== SOCIAL SHARE ===== -->
+    <section class="bc-share" id="bc-share-section">
+        <div class="bc-share-title">Spread the word</div>
+        <div class="bc-share-buttons">
+            <button class="bc-share-btn" id="bc-share-whatsapp">
+                <span class="bc-share-btn-icon">&#x1F4AC;</span> WhatsApp
+            </button>
+            <button class="bc-share-btn" id="bc-share-copy">
+                <span class="bc-share-btn-icon">&#x1F517;</span> Copy Link
+            </button>
+            <button class="bc-share-btn" id="bc-share-story">
+                <span class="bc-share-btn-icon">&#x1F4F8;</span> Story
+            </button>
+        </div>
+    </section>
+
+    <!-- ===== PROGRESS PREVIEW ===== -->
+    <section class="bc-preview bc-anim-6">
+        <div class="bc-preview-title">What tracking looks like</div>
+
+        {% for i in range(bet.durationWeeks) %}
+        <div class="bc-week-row">
+            <span class="bc-week-label">Week {{ i + 1 }}</span>
+            <div class="bc-week-bar-bg"><div class="bc-week-bar-fill"></div></div>
+            <span class="bc-week-target">0 / {{ bet.weeklyTarget }}{{ bet.metricUnit }}</span>
+        </div>
+        {% endfor %}
+
+        <div class="bc-daily-grid">
+            <div class="bc-daily-grid-header">
+                <span></span>
+                <span>Sat</span><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>
+            </div>
+            {% for i in range(bet.durationWeeks) %}
+            <div class="bc-daily-grid-row">
+                <span class="bc-daily-grid-label">Wk {{ i + 1 }}</span>
+                {% for d in range(7) %}
+                <div class="bc-daily-cell"></div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="bc-strava-badge">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
+            Verified via Strava
+        </div>
+    </section>
+
+</div>
+
+<!-- Decline dialog -->
+<div class="bc-decline-overlay" id="bc-decline-overlay">
+    <div class="bc-decline-dialog">
+        <h3>Walk away?</h3>
+        <p>You're about to decline this bet. {{ bet.participants[0].name }} will be notified.</p>
+        <div class="bc-decline-actions">
+            <button class="bc-decline-cancel" id="bc-decline-cancel">Stay In</button>
+            <button class="bc-decline-confirm" id="bc-decline-yes">Decline Bet</button>
+        </div>
+    </div>
+</div>
+
+<!-- Copied toast -->
+<div class="bc-copied-toast" id="bc-copied-toast">Link copied!</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- canvas-confetti CDN -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script>
+(function () {
+    /* --- Countdown timer --- */
+    const startDate = new Date('{{ bet.startDate }}T00:00:00+02:00');
+    const countdownEl = document.getElementById('bc-countdown-value');
+    const countdownWrap = document.getElementById('bc-countdown');
+
+    function updateCountdown() {
+        const now = new Date();
+        const diff = startDate - now;
+        if (diff <= 0) {
+            countdownWrap.innerHTML = '<span class="bc-live-badge">LIVE</span>';
+            return;
+        }
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        countdownEl.textContent = (d > 0 ? d + 'd ' : '') + h + 'h ' + m + 'm ' + s + 's';
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    /* --- Format dates nicely --- */
+    const datesEl = document.getElementById('bc-dates');
+    const startFmt = startDate.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' });
+    const endDate = new Date('{{ bet.endDate }}T00:00:00+02:00');
+    const endFmt = endDate.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' });
+    datesEl.textContent = startFmt + ' \u2192 ' + endFmt;
+
+    /* --- Stake roll-up animation --- */
+    const stakeEl = document.getElementById('bc-stake');
+    const targetStake = {{ bet.stakeAmount }};
+    const symbol = '{{ bet.currencySymbol }}';
+    const currency = '{{ bet.currency }}';
+    let stakeStart = 0;
+    let stakeAnim = null;
+
+    function animateStake(timestamp) {
+        if (!stakeAnim) stakeAnim = timestamp;
+        const progress = Math.min((timestamp - stakeAnim) / 900, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(eased * targetStake);
+        stakeEl.textContent = symbol + current.toLocaleString() + ' ' + currency;
+        if (progress < 1) requestAnimationFrame(animateStake);
+    }
+
+    // Start the roll-up after the card fades in
+    setTimeout(function () { requestAnimationFrame(animateStake); }, 500);
+
+    /* --- Terms toggle --- */
+    const termsToggle = document.getElementById('bc-terms-toggle');
+    const termsBody = document.getElementById('bc-terms-body');
+    const termsChevron = document.getElementById('bc-terms-chevron');
+
+    termsToggle.addEventListener('click', function () {
+        const isOpen = termsBody.classList.toggle('open');
+        termsChevron.classList.toggle('open');
+        termsToggle.setAttribute('aria-expanded', isOpen);
+    });
+
+    // Auto-open terms on load so user sees the checkboxes
+    setTimeout(function () {
+        termsBody.classList.add('open');
+        termsChevron.classList.add('open');
+        termsToggle.setAttribute('aria-expanded', 'true');
+    }, 800);
+
+    /* --- Checkbox gating --- */
+    const checkRules = document.getElementById('bc-check-rules');
+    const checkSafety = document.getElementById('bc-check-safety');
+    const btnConfirm = document.getElementById('bc-btn-confirm');
+
+    function updateBtn() {
+        btnConfirm.disabled = !(checkRules.checked && checkSafety.checked);
+    }
+    checkRules.addEventListener('change', updateBtn);
+    checkSafety.addEventListener('change', updateBtn);
+
+    /* --- Confirm action --- */
+    let isConfirmed = false;
+
+    btnConfirm.addEventListener('click', function () {
+        if (isConfirmed || btnConfirm.disabled) return;
+        isConfirmed = true;
+
+        // Fire-and-forget: notify backend + Telegram
+        fetch('/bet/{{ bet.id }}/confirm', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ participant_id: 'warren-1', action: 'confirm' })
+        });
+
+        // Confetti burst
+        confetti({
+            particleCount: 150,
+            spread: 80,
+            origin: { y: 0.7 },
+            colors: ['#00FF87', '#FF6B35', '#FFFFFF', '#FC4C02'],
+        });
+
+        // Second burst slightly delayed
+        setTimeout(function () {
+            confetti({
+                particleCount: 80,
+                spread: 100,
+                origin: { y: 0.65 },
+                colors: ['#00FF87', '#FF6B35'],
+            });
+        }, 250);
+
+        // Haptic feedback on mobile
+        if (navigator.vibrate) navigator.vibrate([50, 30, 80]);
+
+        // Update button
+        const now = new Date();
+        const timeFmt = now.toLocaleString('en-ZA', {
+            day: 'numeric', month: 'short', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+        btnConfirm.textContent = 'LOCKED IN \u2705';
+        btnConfirm.classList.add('locked');
+        btnConfirm.disabled = true;
+
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'bc-locked-time';
+        timeSpan.textContent = 'Confirmed ' + timeFmt;
+        btnConfirm.parentElement.insertBefore(timeSpan, btnConfirm.nextSibling);
+
+        // Hide decline link
+        document.getElementById('bc-decline-trigger').style.display = 'none';
+
+        // Update participant card (first pending participant = current user for demo)
+        const pendingCard = document.querySelector('.bc-participant:not(.confirmed)');
+        if (pendingCard) {
+            pendingCard.classList.add('confirmed');
+            const statusEl = pendingCard.querySelector('.bc-status');
+            statusEl.className = 'bc-status bc-status-confirmed';
+            statusEl.innerHTML = 'Confirmed \u2705';
+            pendingCard.querySelector('.bc-avatar').style.borderColor = 'var(--bc-green)';
+        }
+
+        // Show share strip
+        document.getElementById('bc-share-section').classList.add('visible');
+    });
+
+    /* --- Decline flow --- */
+    const declineTrigger = document.getElementById('bc-decline-trigger');
+    const declineOverlay = document.getElementById('bc-decline-overlay');
+    const declineCancel = document.getElementById('bc-decline-cancel');
+    const declineYes = document.getElementById('bc-decline-yes');
+
+    declineTrigger.addEventListener('click', function () {
+        declineOverlay.classList.add('open');
+    });
+
+    declineCancel.addEventListener('click', function () {
+        declineOverlay.classList.remove('open');
+    });
+
+    declineOverlay.addEventListener('click', function (e) {
+        if (e.target === declineOverlay) declineOverlay.classList.remove('open');
+    });
+
+    declineYes.addEventListener('click', function () {
+        declineOverlay.classList.remove('open');
+
+        // Fire-and-forget: notify backend + Telegram
+        fetch('/bet/{{ bet.id }}/confirm', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ participant_id: 'warren-1', action: 'decline' })
+        });
+
+        btnConfirm.textContent = 'DECLINED';
+        btnConfirm.disabled = true;
+        btnConfirm.style.background = 'var(--bc-red)';
+        btnConfirm.style.color = '#fff';
+        declineTrigger.style.display = 'none';
+        checkRules.disabled = true;
+        checkSafety.disabled = true;
+    });
+
+    /* --- Social sharing --- */
+    const shareWhatsapp = document.getElementById('bc-share-whatsapp');
+    const shareCopy = document.getElementById('bc-share-copy');
+    const shareStory = document.getElementById('bc-share-story');
+    const copiedToast = document.getElementById('bc-copied-toast');
+
+    const shareUrl = window.location.href;
+    const shareText = '\uD83D\uDCAA SweatBet: {{ bet.participants[0].name }} vs {{ bet.participants[1].name }} \u2014 {{ bet.currencySymbol }}{{ "{:,.0f}".format(bet.stakeAmount) }} on the line! {{ bet.betName }}. Are you in?';
+
+    shareWhatsapp.addEventListener('click', function () {
+        window.open('https://wa.me/?text=' + encodeURIComponent(shareText + ' ' + shareUrl), '_blank');
+    });
+
+    shareCopy.addEventListener('click', function () {
+        navigator.clipboard.writeText(shareUrl).then(function () {
+            copiedToast.classList.add('show');
+            setTimeout(function () { copiedToast.classList.remove('show'); }, 2000);
+        });
+    });
+
+    shareStory.addEventListener('click', function () {
+        // Placeholder — would use html-to-image to generate a 1080x1920 card
+        alert('Story image generation coming soon! For now, screenshot the page.');
+    });
+})();
+</script>
+{% endblock %}

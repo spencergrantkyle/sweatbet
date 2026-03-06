@@ -4,14 +4,13 @@ Dashboard routes for authenticated users.
 Displays user information and Strava activities.
 """
 
-import uuid
-
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from backend.fastapi.dependencies.database import get_sync_db
+from backend.fastapi.dependencies.auth import get_current_user
 from backend.fastapi.models.user import User, StravaToken
 from backend.fastapi.models.bet import Bet, BetStatus
 from backend.fastapi.services.strava import strava_client
@@ -20,22 +19,6 @@ router = APIRouter()
 
 # Templates
 templates = Jinja2Templates(directory="frontend/sweatbet/templates")
-
-
-async def get_current_user(request: Request, db: Session) -> User | None:
-    """Get the current authenticated user from session."""
-    user_id = request.session.get("user_id")
-    if not user_id:
-        return None
-    
-    # Convert string back to UUID for database query
-    try:
-        user_uuid = uuid.UUID(user_id)
-    except ValueError:
-        return None
-    
-    user = db.query(User).filter(User.id == user_uuid).first()
-    return user
 
 
 @router.get("/dashboard")

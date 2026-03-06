@@ -1,0 +1,750 @@
+/* ============================================
+   SweatBet — Bet Confirmation Page
+   Fight-card aesthetic, mobile-first
+   ============================================ */
+
+:root {
+    --bc-bg: #0A0A0A;
+    --bc-card: #151515;
+    --bc-card-border: #222;
+    --bc-green: #00FF87;
+    --bc-green-dim: rgba(0, 255, 135, 0.15);
+    --bc-orange: #FF6B35;
+    --bc-orange-dim: rgba(255, 107, 53, 0.15);
+    --bc-red: #FF4757;
+    --bc-white: #FFFFFF;
+    --bc-gray: #888;
+    --bc-gray-dark: #444;
+    --bc-text-secondary: #A0A0A0;
+}
+
+/* ---- Page container ---- */
+.bc-page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem 1rem 3rem;
+}
+
+/* ---- Staggered fade-in animations ---- */
+@keyframes bc-fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.bc-anim-1 { animation: bc-fadeUp 0.6s ease both; animation-delay: 0.05s; }
+.bc-anim-2 { animation: bc-fadeUp 0.6s ease both; animation-delay: 0.18s; }
+.bc-anim-3 { animation: bc-fadeUp 0.6s ease both; animation-delay: 0.30s; }
+.bc-anim-4 { animation: bc-fadeUp 0.6s ease both; animation-delay: 0.42s; }
+.bc-anim-5 { animation: bc-fadeUp 0.6s ease both; animation-delay: 0.54s; }
+.bc-anim-6 { animation: bc-fadeUp 0.6s ease both; animation-delay: 0.64s; }
+.bc-anim-7 { animation: bc-fadeUp 0.6s ease both; animation-delay: 0.74s; }
+
+/* ---- Hero ---- */
+.bc-hero {
+    text-align: center;
+    padding: 2rem 0 1.5rem;
+}
+
+.bc-challenge-badge {
+    display: inline-block;
+    background: var(--bc-green-dim);
+    color: var(--bc-green);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 0.35rem 1rem;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 255, 135, 0.3);
+    margin-bottom: 1rem;
+}
+
+.bc-hero-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+}
+
+.bc-activity-icon {
+    display: inline-block;
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+    animation: bc-bounce 1s ease both;
+    animation-delay: 0.3s;
+}
+
+@keyframes bc-bounce {
+    0%   { opacity: 0; transform: scale(0.4) translateY(20px); }
+    50%  { opacity: 1; transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.bc-countdown {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bc-card);
+    border: 1px solid var(--bc-card-border);
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    color: var(--bc-text-secondary);
+    margin-top: 0.5rem;
+}
+
+.bc-countdown-value {
+    font-weight: 700;
+    color: var(--bc-orange);
+    font-variant-numeric: tabular-nums;
+}
+
+.bc-live-badge {
+    background: var(--bc-green);
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    animation: bc-pulse 2s infinite;
+}
+
+@keyframes bc-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* ---- Details Card ---- */
+.bc-details {
+    background: var(--bc-card);
+    border: 1px solid var(--bc-card-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.bc-details-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--bc-gray);
+    margin-bottom: 1rem;
+}
+
+.bc-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.bc-detail-row:last-child {
+    border-bottom: none;
+}
+
+.bc-detail-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--bc-text-secondary);
+}
+
+.bc-detail-label-icon {
+    font-size: 1rem;
+    width: 1.4rem;
+    text-align: center;
+}
+
+.bc-detail-value {
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: right;
+}
+
+.bc-stake-value {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--bc-orange);
+}
+
+/* Slot-machine number animation */
+@keyframes bc-countUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.bc-stake-value {
+    animation: bc-countUp 0.8s ease both;
+    animation-delay: 0.5s;
+}
+
+/* ---- Versus / Participants ---- */
+.bc-versus {
+    background: var(--bc-card);
+    border: 1px solid var(--bc-card-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.bc-versus-header {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--bc-gray);
+    margin-bottom: 1.25rem;
+    text-align: center;
+}
+
+.bc-versus-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.bc-participant {
+    flex: 1;
+    text-align: center;
+    padding: 1rem 0.5rem;
+    background: rgba(255,255,255,0.02);
+    border-radius: 12px;
+    border: 1px solid transparent;
+    transition: all 0.4s ease;
+    position: relative;
+}
+
+.bc-participant.confirmed {
+    border-color: rgba(0, 255, 135, 0.3);
+    box-shadow: 0 0 20px rgba(0, 255, 135, 0.08);
+}
+
+.bc-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 auto 0.5rem;
+    background: var(--bc-card-border);
+    border: 2px solid var(--bc-gray-dark);
+    transition: border-color 0.4s;
+}
+
+.bc-participant.confirmed .bc-avatar {
+    border-color: var(--bc-green);
+}
+
+.bc-participant-name {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.bc-participant-role {
+    font-size: 0.7rem;
+    color: var(--bc-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.bc-status {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 50px;
+    letter-spacing: 0.5px;
+}
+
+.bc-status-pending {
+    background: rgba(255,255,255,0.06);
+    color: var(--bc-gray);
+}
+
+.bc-status-confirmed {
+    background: var(--bc-green-dim);
+    color: var(--bc-green);
+}
+
+.bc-vs-divider {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--bc-orange);
+    text-shadow: 0 0 20px rgba(255, 107, 53, 0.4);
+    flex-shrink: 0;
+}
+
+/* ---- Terms & Conditions ---- */
+.bc-terms {
+    background: var(--bc-card);
+    border: 1px solid var(--bc-card-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.bc-terms-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--bc-white);
+    padding: 0;
+    font-family: inherit;
+}
+
+.bc-terms-toggle-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--bc-gray);
+}
+
+.bc-terms-chevron {
+    font-size: 0.9rem;
+    color: var(--bc-gray);
+    transition: transform 0.3s;
+}
+
+.bc-terms-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, margin 0.35s ease;
+}
+
+.bc-terms-body.open {
+    max-height: 500px;
+    margin-top: 1rem;
+}
+
+.bc-terms-chevron.open {
+    transform: rotate(180deg);
+}
+
+.bc-terms-text {
+    font-size: 0.85rem;
+    color: var(--bc-text-secondary);
+    line-height: 1.65;
+    margin-bottom: 1.25rem;
+    padding: 1rem;
+    background: rgba(255,255,255,0.02);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.04);
+}
+
+.bc-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.bc-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--bc-text-secondary);
+    line-height: 1.5;
+}
+
+.bc-checkbox-label input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border: 2px solid var(--bc-gray-dark);
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    margin-top: 1px;
+    transition: all 0.25s ease;
+}
+
+.bc-checkbox-label input[type="checkbox"]:checked {
+    background: var(--bc-green);
+    border-color: var(--bc-green);
+}
+
+.bc-checkbox-label input[type="checkbox"]:checked::after {
+    content: '\2713';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #000;
+    font-size: 0.8rem;
+    font-weight: 900;
+}
+
+/* ---- CTA Section ---- */
+.bc-cta {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.bc-btn-confirm {
+    width: 100%;
+    padding: 1.1rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 800;
+    font-family: inherit;
+    letter-spacing: 0.5px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.bc-btn-confirm:not(:disabled) {
+    background: var(--bc-green);
+    color: #000;
+    box-shadow: 0 4px 25px rgba(0, 255, 135, 0.3);
+}
+
+.bc-btn-confirm:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 35px rgba(0, 255, 135, 0.45);
+}
+
+.bc-btn-confirm:not(:disabled):active {
+    transform: translateY(0);
+}
+
+.bc-btn-confirm:disabled {
+    background: var(--bc-card-border);
+    color: var(--bc-gray-dark);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.bc-btn-confirm.locked {
+    background: var(--bc-green-dim);
+    color: var(--bc-green);
+    cursor: default;
+    box-shadow: none;
+}
+
+.bc-btn-confirm.locked:hover {
+    transform: none;
+}
+
+.bc-locked-time {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--bc-gray);
+    margin-top: 0.5rem;
+}
+
+.bc-decline-link {
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: var(--bc-gray);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s;
+}
+
+.bc-decline-link:hover {
+    color: var(--bc-red);
+}
+
+/* Decline dialog */
+.bc-decline-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.bc-decline-overlay.open {
+    display: flex;
+}
+
+.bc-decline-dialog {
+    background: var(--bc-card);
+    border: 1px solid var(--bc-card-border);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+}
+
+.bc-decline-dialog h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.bc-decline-dialog p {
+    color: var(--bc-text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.bc-decline-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.bc-decline-actions button {
+    flex: 1;
+    padding: 0.75rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.bc-decline-cancel {
+    background: var(--bc-card-border);
+    color: var(--bc-white);
+}
+
+.bc-decline-confirm {
+    background: var(--bc-red);
+    color: white;
+}
+
+/* ---- Social Share Strip ---- */
+.bc-share {
+    background: var(--bc-card);
+    border: 1px solid var(--bc-card-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    display: none;
+}
+
+.bc-share.visible {
+    display: block;
+}
+
+.bc-share-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--bc-gray);
+    margin-bottom: 1rem;
+}
+
+.bc-share-buttons {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.bc-share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: inherit;
+    border: 1px solid var(--bc-card-border);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    color: var(--bc-white);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.bc-share-btn:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: var(--bc-gray-dark);
+}
+
+.bc-share-btn-icon {
+    font-size: 1rem;
+}
+
+.bc-copied-toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--bc-green);
+    color: #000;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 300;
+    pointer-events: none;
+}
+
+.bc-copied-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ---- Progress Preview ---- */
+.bc-preview {
+    background: var(--bc-card);
+    border: 1px solid var(--bc-card-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.bc-preview-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--bc-gray);
+    margin-bottom: 1.25rem;
+}
+
+.bc-week-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.bc-week-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--bc-text-secondary);
+    min-width: 4rem;
+}
+
+.bc-week-bar-bg {
+    flex: 1;
+    height: 10px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.bc-week-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--bc-green);
+    border-radius: 5px;
+    transition: width 1s ease;
+}
+
+.bc-week-target {
+    font-size: 0.7rem;
+    color: var(--bc-gray);
+    min-width: 3rem;
+    text-align: right;
+}
+
+/* Daily grid */
+.bc-daily-grid {
+    margin-top: 1.25rem;
+}
+
+.bc-daily-grid-header {
+    display: grid;
+    grid-template-columns: 4rem repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.bc-daily-grid-header span {
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: var(--bc-gray);
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.bc-daily-grid-row {
+    display: grid;
+    grid-template-columns: 4rem repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.bc-daily-grid-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--bc-text-secondary);
+    display: flex;
+    align-items: center;
+}
+
+.bc-daily-cell {
+    aspect-ratio: 1;
+    background: rgba(255,255,255,0.03);
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.04);
+}
+
+.bc-strava-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    padding: 0.4rem 0.8rem;
+    background: rgba(252, 76, 2, 0.1);
+    border: 1px solid rgba(252, 76, 2, 0.2);
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #FC4C02;
+}
+
+.bc-strava-badge svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 400px) {
+    .bc-hero-title {
+        font-size: 1.75rem;
+    }
+    .bc-versus-layout {
+        gap: 0.5rem;
+    }
+    .bc-avatar {
+        width: 44px;
+        height: 44px;
+        font-size: 0.9rem;
+    }
+    .bc-participant-name {
+        font-size: 0.9rem;
+    }
+}

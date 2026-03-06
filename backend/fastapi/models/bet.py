@@ -64,7 +64,7 @@ class Bet(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationship to creator
-    creator = relationship("User", backref="bets")
+    creator = relationship("User", back_populates="bets")
 
     def __repr__(self):
         return f"<Bet(id={self.id}, title='{self.title}', status={self.status}, creator_id={self.creator_id})>"

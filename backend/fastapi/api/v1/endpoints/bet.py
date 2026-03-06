@@ -14,6 +14,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from backend.fastapi.dependencies.database import get_sync_db
+from backend.fastapi.dependencies.auth import get_current_user, require_auth
 from backend.fastapi.models.user import User
 from backend.fastapi.models.bet import Bet, BetStatus as ModelBetStatus, ActivityType as ModelActivityType
 from backend.fastapi.schemas.bet import BetCreate, BetRead, BetSummary
@@ -22,48 +23,6 @@ router = APIRouter()
 
 # Templates
 templates = Jinja2Templates(directory="frontend/sweatbet/templates")
-
-
-async def get_current_user(request: Request, db: Session) -> User | None:
-    """Get the current authenticated user from session."""
-    user_id = request.session.get("user_id")
-    if not user_id:
-        return None
-    
-    try:
-        user_uuid = uuid.UUID(user_id)
-    except ValueError:
-        return None
-    
-    user = db.query(User).filter(User.id == user_uuid).first()
-    return user
-
-
-def require_auth(request: Request, db: Session = Depends(get_sync_db)):
-    """Dependency that requires user authentication."""
-    user_id = request.session.get("user_id")
-    if not user_id:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication required"
-        )
-    
-    try:
-        user_uuid = uuid.UUID(user_id)
-    except ValueError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid session"
-        )
-    
-    user = db.query(User).filter(User.id == user_uuid).first()
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found"
-        )
-    
-    return user
 
 
 @router.get("/bets/create", response_class=HTMLResponse)
@@ -186,8 +145,12 @@ async def create_bet(
     db.add(bet)
     db.commit()
     db.refresh(bet)
-    
-    return RedirectResponse(url="/dashboard", status_code=status.HTTP_302_FOUND)
+
+    # If there's a wager, redirect to payment checkout; otherwise activate immediately
+    if bet.wager_amount > 0:
+        return RedirectResponse(url=f"/payments/checkout/{bet.id}", status_code=status.HTTP_302_FOUND)
+
+    return RedirectResponse(url=f"/bet/{bet.id}/confirm", status_code=status.HTTP_302_FOUND)
 
 
 @router.get("/bets", response_class=HTMLResponse)

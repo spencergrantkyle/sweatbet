@@ -1,0 +1,708 @@
+/* ============================================
+   SweatBet — Payment Pages
+   Checkout, return, and wallet styles
+   ============================================ */
+
+/* ---- Payment Checkout ---- */
+.payment-page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+}
+
+.payment-header {
+    margin-bottom: 2rem;
+}
+
+.payment-header .back-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+    transition: color 0.2s;
+}
+
+.payment-header .back-link:hover {
+    color: var(--text-primary);
+}
+
+.payment-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.payment-header .payment-subtitle {
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+/* ---- Order Summary Card ---- */
+.order-summary {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.order-summary-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.order-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+}
+
+.order-row + .order-row {
+    border-top: 1px solid var(--border-color);
+}
+
+.order-label {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.order-value {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.order-row.total {
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+    border-top: 2px solid var(--border-color);
+}
+
+.order-row.total .order-label {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.order-row.total .order-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ---- Payment Methods ---- */
+.payment-methods {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.payment-methods-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.payment-method-option {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 0.75rem;
+    position: relative;
+}
+
+.payment-method-option:last-child {
+    margin-bottom: 0;
+}
+
+.payment-method-option:hover {
+    border-color: #444;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.payment-method-option.selected {
+    border-color: var(--strava-orange);
+    background: rgba(252, 76, 2, 0.05);
+}
+
+.payment-method-option input[type="radio"] {
+    display: none;
+}
+
+.payment-method-radio {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.payment-method-option.selected .payment-method-radio {
+    border-color: var(--strava-orange);
+}
+
+.payment-method-option.selected .payment-method-radio::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 10px;
+    height: 10px;
+    background: var(--strava-orange);
+    border-radius: 50%;
+}
+
+.payment-method-icon {
+    font-size: 1.5rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-dark);
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.payment-method-info {
+    flex: 1;
+}
+
+.payment-method-name {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.15rem;
+}
+
+.payment-method-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.payment-method-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 50px;
+    background: rgba(0, 212, 106, 0.15);
+    color: var(--accent-green);
+    white-space: nowrap;
+}
+
+/* ---- Card icons row ---- */
+.card-brands {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.card-brand {
+    width: 36px;
+    height: 24px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+/* ---- Pay Button ---- */
+.pay-button-section {
+    margin-top: 1.5rem;
+}
+
+.btn-pay {
+    width: 100%;
+    padding: 1.1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: inherit;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: var(--strava-orange);
+    color: white;
+    box-shadow: 0 4px 20px rgba(252, 76, 2, 0.3);
+    letter-spacing: 0.3px;
+}
+
+.btn-pay:hover:not(:disabled) {
+    background: var(--strava-orange-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(252, 76, 2, 0.4);
+}
+
+.btn-pay:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-pay.processing {
+    pointer-events: none;
+    opacity: 0.85;
+}
+
+.pay-secure-note {
+    text-align: center;
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.pay-secure-note svg {
+    width: 14px;
+    height: 14px;
+    fill: var(--text-muted);
+}
+
+/* ---- Stitch branding ---- */
+.powered-by {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.powered-by span {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+/* ---- Free Bet Notice ---- */
+.free-bet-notice {
+    background: rgba(0, 212, 106, 0.1);
+    border: 1px solid rgba(0, 212, 106, 0.3);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.free-bet-notice .notice-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.free-bet-notice h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--accent-green);
+}
+
+.free-bet-notice p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.btn-activate {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: inherit;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: var(--accent-green);
+    color: var(--bg-dark);
+    margin-top: 1.5rem;
+}
+
+.btn-activate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 212, 106, 0.3);
+}
+
+/* ============================================
+   Payment Return Page
+   ============================================ */
+
+.payment-result {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.result-icon {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    line-height: 1;
+}
+
+.result-icon.success {
+    animation: resultPop 0.5s ease both;
+}
+
+@keyframes resultPop {
+    0% { transform: scale(0.3); opacity: 0; }
+    60% { transform: scale(1.15); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.result-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.result-title.success {
+    color: var(--accent-green);
+}
+
+.result-title.failed {
+    color: var(--accent-red);
+}
+
+.result-title.pending {
+    color: var(--strava-orange);
+}
+
+.result-message {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    max-width: 400px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+}
+
+.result-details {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    max-width: 400px;
+    margin: 0 auto 2rem;
+    text-align: left;
+}
+
+.result-detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+}
+
+.result-detail-row + .result-detail-row {
+    border-top: 1px solid var(--border-color);
+}
+
+.result-detail-label {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.result-detail-value {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.result-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ============================================
+   Wallet Page
+   ============================================ */
+
+.wallet-page {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.wallet-balance-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.wallet-balance-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(252, 76, 2, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.wallet-balance-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.wallet-balance-amount {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 0.25rem;
+}
+
+.wallet-balance-amount .currency {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-right: 0.25rem;
+}
+
+.wallet-balance-sub {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.wallet-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.wallet-actions .btn {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+}
+
+/* Bank Account Section */
+.wallet-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.wallet-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.wallet-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+}
+
+.bank-account-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-dark);
+    border-radius: 12px;
+}
+
+.bank-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.bank-details {
+    flex: 1;
+}
+
+.bank-name {
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+}
+
+.bank-account-number {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.bank-status {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+}
+
+.bank-status.verified {
+    background: rgba(0, 212, 106, 0.15);
+    color: var(--accent-green);
+}
+
+.bank-status.unverified {
+    background: rgba(252, 76, 2, 0.15);
+    color: var(--strava-orange);
+}
+
+/* Add bank form */
+.bank-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.bank-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* Transaction History */
+.transaction-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.transaction-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 0;
+}
+
+.transaction-item + .transaction-item {
+    border-top: 1px solid var(--border-color);
+}
+
+.transaction-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.transaction-icon.deposit {
+    background: rgba(0, 212, 106, 0.1);
+}
+
+.transaction-icon.payout {
+    background: rgba(252, 76, 2, 0.1);
+}
+
+.transaction-info {
+    flex: 1;
+}
+
+.transaction-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.1rem;
+}
+
+.transaction-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.transaction-amount {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.transaction-amount.positive {
+    color: var(--accent-green);
+}
+
+.transaction-amount.negative {
+    color: var(--text-secondary);
+}
+
+.transaction-status {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 50px;
+    margin-left: 0.5rem;
+}
+
+.transaction-status.completed {
+    background: rgba(0, 212, 106, 0.15);
+    color: var(--accent-green);
+}
+
+.transaction-status.pending {
+    background: rgba(252, 76, 2, 0.15);
+    color: var(--strava-orange);
+}
+
+.empty-transactions {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+    .payment-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .wallet-balance-amount {
+        font-size: 2.2rem;
+    }
+
+    .wallet-actions {
+        flex-direction: column;
+    }
+
+    .bank-form .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .result-actions {
+        flex-direction: column;
+    }
+}
