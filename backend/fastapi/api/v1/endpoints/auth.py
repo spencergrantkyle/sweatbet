@@ -144,11 +144,67 @@ async def auth_callback(
         return RedirectResponse(url=f"/?error=auth_failed")
 
 
+@router.get("/demo-login")
+async def demo_login(
+    request: Request,
+    db: Session = Depends(get_sync_db)
+):
+    """
+    Demo login - bypasses Strava OAuth for local development.
+    Creates or finds a demo user and logs them in directly.
+    """
+    import time
+    from backend.fastapi.core.init_settings import global_settings as app_settings
+    if getattr(app_settings, 'ENV_MODE', 'prod') != 'dev':
+        return RedirectResponse(url="/?error=demo_not_available")
+
+    demo_athlete_id = 12345678
+
+    user = db.query(User).filter(User.strava_athlete_id == demo_athlete_id).first()
+
+    if not user:
+        user = User(
+            strava_athlete_id=demo_athlete_id,
+            firstname="Spencer",
+            lastname="Kyle",
+            profile_picture=None
+        )
+        db.add(user)
+        db.flush()
+
+        token = StravaToken(
+            user_id=user.id,
+            access_token="demo_access_token",
+            refresh_token="demo_refresh_token",
+            expires_at=int(time.time()) + 86400,
+            scope="activity:read_all,read"
+        )
+        db.add(token)
+        db.commit()
+    else:
+        existing_token = db.query(StravaToken).filter(StravaToken.user_id == user.id).first()
+        if not existing_token:
+            token = StravaToken(
+                user_id=user.id,
+                access_token="demo_access_token",
+                refresh_token="demo_refresh_token",
+                expires_at=int(time.time()) + 86400,
+                scope="activity:read_all,read"
+            )
+            db.add(token)
+            db.commit()
+
+    request.session["user_id"] = str(user.id)
+    request.session["strava_athlete_id"] = demo_athlete_id
+
+    return RedirectResponse(url="/dashboard", status_code=302)
+
+
 @router.get("/logout")
 async def auth_logout(request: Request):
     """
     Log out the current user.
-    
+
     Clears the session and redirects to the landing page.
     """
     request.session.clear()
