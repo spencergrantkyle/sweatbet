@@ -25,7 +25,6 @@ venv/
 .venv/
 ENV/
 env/
-Fullstack-FastAPI/venv/
 
 # Environment files
 .env
