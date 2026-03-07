@@ -3,6 +3,7 @@ Bet confirmation endpoint - view and confirm/decline bets.
 Sends Telegram notifications on confirm/decline actions.
 """
 
+import json
 import uuid
 from datetime import datetime
 from fastapi import APIRouter, Request, Depends, HTTPException, BackgroundTasks
@@ -25,6 +26,66 @@ class ConfirmAction(BaseModel):
     action: str  # "confirm" or "decline"
 
 
+# ── One-time seed endpoint for Wazzax bet ──────────────────────────
+SEED_SECRET = "wazzax2026"  # Simple guard so only you can trigger it
+
+@router.get("/seed-wazzax/{secret}")
+async def seed_wazzax_bet(secret: str, db: Session = Depends(get_sync_db)):
+    """One-time seed: creates Spencer + Warren users and the bet. Hit once, then remove."""
+    if secret != SEED_SECRET:
+        raise HTTPException(status_code=403, detail="Nope")
+
+    from backend.fastapi.models.bet import ActivityType
+    from datetime import datetime as dt
+
+    SPENCER_STRAVA_ID = 12345678
+    WARREN_STRAVA_ID = 99999901
+
+    # Upsert Spencer
+    spencer = db.query(User).filter(User.strava_athlete_id == SPENCER_STRAVA_ID).first()
+    if not spencer:
+        spencer = User(strava_athlete_id=SPENCER_STRAVA_ID, firstname="Spencer", lastname="Kyle")
+        db.add(spencer)
+        db.flush()
+
+    # Upsert Warren
+    warren = db.query(User).filter(User.strava_athlete_id == WARREN_STRAVA_ID).first()
+    if not warren:
+        warren = User(strava_athlete_id=WARREN_STRAVA_ID, firstname="Warren", lastname="Wazzax")
+        db.add(warren)
+        db.flush()
+
+    # Check if bet exists
+    existing = db.query(Bet).filter(
+        Bet.creator_id == spencer.id, Bet.title == "15km per week x 4 weeks"
+    ).first()
+    if existing:
+        return JSONResponse({
+            "status": "already_exists",
+            "url": f"/bet/{existing.id}/confirm",
+        })
+
+    bet = Bet(
+        creator_id=spencer.id,
+        title="15km per week x 4 weeks",
+        description=json.dumps({"opponent_id": str(warren.id)}),
+        wager_amount=2500.0,
+        activity_type=ActivityType.WALK,
+        distance_km=15.0,
+        deadline=dt(2026, 4, 4),
+        status=BetStatus.PENDING,
+        created_at=dt(2026, 3, 7),
+    )
+    db.add(bet)
+    db.commit()
+
+    return JSONResponse({
+        "status": "created",
+        "url": f"/bet/{bet.id}/confirm",
+    })
+# ── End seed endpoint ──────────────────────────────────────────────
+
+
 @router.get("/bet/{bet_id}/confirm")
 async def bet_confirm_page(
     bet_id: str,
@@ -42,11 +103,13 @@ async def bet_confirm_page(
         raise HTTPException(status_code=404, detail="Bet not found")
 
     creator = db.query(User).filter(User.id == bet.creator_id).first()
+    participants = _build_participants(db, bet, creator)
+    is_vs = len(participants) > 1
 
     # Build template-compatible bet dict
     bet_data = {
         "id": str(bet.id),
-        "betType": "Solo Challenge",
+        "betType": "VS Challenge" if is_vs else "Solo Challenge",
         "challengeName": bet.title,
         "betName": bet.title,
         "activityType": bet.activity_type.value,
@@ -68,15 +131,7 @@ async def bet_confirm_page(
             f"3. Manual entries do not count. "
             f"4. The bet is settled automatically based on Strava data."
         ),
-        "participants": [
-            {
-                "id": str(bet.creator_id),
-                "name": creator.firstname or "Creator" if creator else "Creator",
-                "initials": _get_initials(creator) if creator else "?",
-                "role": "Challenger",
-                "confirmed": bet.status != BetStatus.PENDING,
-            },
-        ],
+        "participants": participants,
         "status": bet.status.value,
     }
 
@@ -108,13 +163,27 @@ async def bet_confirm_action(
     creator_name = creator.firstname if creator else "Unknown"
     timestamp = datetime.now().strftime("%d %b %Y, %H:%M")
 
+    # Try to resolve opponent name for richer notifications
+    opponent_name = None
+    try:
+        meta = json.loads(bet.description or "")
+        oid = meta.get("opponent_id")
+        if oid:
+            opp = db.query(User).filter(User.id == uuid.UUID(oid)).first()
+            if opp:
+                opponent_name = opp.firstname
+    except (json.JSONDecodeError, ValueError, TypeError):
+        pass
+
     if body.action == "confirm":
         bet.status = BetStatus.ACTIVE
         db.commit()
 
         wager_line = f"Wager: R{bet.wager_amount:,.0f}\n" if bet.wager_amount else ""
+        who_confirmed = f"{opponent_name} confirmed" if opponent_name else "Confirmed"
         message = (
             "\U0001F91D <b>BET CONFIRMED!</b>\n\n"
+            f"{who_confirmed}!\n"
             f"Bet: {bet.title}\n"
             f"Activity: {bet.activity_type.value}\n"
             f"{wager_line}"
@@ -135,6 +204,45 @@ async def bet_confirm_action(
     background_tasks.add_task(telegram_notifier.send_message, message)
 
     return JSONResponse({"status": "ok", "action": body.action})
+
+
+def _build_participants(db: Session, bet: Bet, creator: User) -> list:
+    """Build participant list. If description contains opponent_id JSON, show both."""
+    participants = []
+    opponent = None
+    try:
+        meta = json.loads(bet.description or "")
+        opponent_id = meta.get("opponent_id")
+        if opponent_id:
+            opponent = db.query(User).filter(User.id == uuid.UUID(opponent_id)).first()
+    except (json.JSONDecodeError, ValueError, TypeError):
+        pass
+
+    if opponent:
+        participants.append({
+            "id": str(opponent.id),
+            "name": opponent.firstname or "Challenger",
+            "initials": _get_initials(opponent),
+            "role": "Challenger",
+            "confirmed": False,
+        })
+        participants.append({
+            "id": str(bet.creator_id),
+            "name": creator.firstname or "Creator" if creator else "Creator",
+            "initials": _get_initials(creator) if creator else "?",
+            "role": "Creator",
+            "confirmed": True,
+        })
+    else:
+        participants.append({
+            "id": str(bet.creator_id),
+            "name": creator.firstname or "Creator" if creator else "Creator",
+            "initials": _get_initials(creator) if creator else "?",
+            "role": "Challenger",
+            "confirmed": bet.status != BetStatus.PENDING,
+        })
+
+    return participants
 
 
 def _get_activity_icon(activity_type: str) -> str:
